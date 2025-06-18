@@ -5,20 +5,31 @@
 ### [사용자 등록](https://github.com/OUS-KR/BLE.KR/issues/new?template=01-user-register-by-issue.yml)
 
 - `BLE.KR/u/{사용자 아이디}` 주소 기반의 사용자 등록
-  - 사용자 예제: [BLE.KR/u/ble](https://ble.kr/u/ble) ([BLE.KR/@ble](https://ble.kr/@ble))
+  - 사용자 예제: [BLE.KR/u/ble](https://ble.kr/u/ble)
   - 사용자 등록 예제: https://github.com/OUS-KR/BLE.KR/issues/1
+- `BLE.KR/@{사용자 아이디}` 형태의 짧은 주소 지원
+  - 사용자 예제: [BLE.KR/@ble](https://ble.kr/@ble)
 
 ### [사용자 단축주소 생성](https://github.com/OUS-KR/BLE.KR/issues/new?template=02-user-short-url-register-by-issue.yml)
 
 - `BLE.KR/u/{사용자 아이디}/{단축 경로}` 형태의 단축주소 생성
-  - 사용자 단축주소 예제: [BLE.KR/u/ble/links/ble-kr](https://ble.kr/u/ble/links/ble-kr) ([BLE.KR/@ble/links/ble-kr](https://ble.kr/@ble/links/ble-kr))
+  - 사용자 단축주소 예제: [BLE.KR/u/ble/links/ble-kr](https://ble.kr/u/ble/links/ble-kr)
   - 사용자 단축주소 등록 예제: https://github.com/OUS-KR/BLE.KR/issues/2
+  - 동일한 단축 경로 존재 시 덮어쓰기
+- `BLE.KR/@{사용자 아이디}/{단축 경로}` 형태의 짧은 주소 지원
+  - 사용자 단축주소 예제: [BLE.KR/@ble/links/ble-kr](https://ble.kr/@ble/links/ble-kr)
+- 단축 경로가 `links`로 시작하면 `BLE.KR/@{사용자 아이디}/@{links를 제외한 단축 경로}` 형태로 생략 가능
+  - 사용자 단축주소 예제: [BLE.KR/@ble/@ble-kr](https://ble.kr/@ble/@ble-kr)
 
 ### [사용자 글 작성](https://github.com/OUS-KR/BLE.KR/issues/new?template=03-user-article-writing-by-issue.yml)
 
 - `BLE.KR/u/{사용자 아이디}/{글 경로}` 형태의 글 작성
-  - 사용자 글 예제: [BLE.KR/u/ble/articles/example](https://ble.kr/u/ble/articles/example) ([BLE.KR/@ble/articles/example](https://ble.kr/@ble/articles/example))
+  - 사용자 글 예제: [BLE.KR/u/ble/articles/example](https://ble.kr/u/ble/articles/example)
   - 사용자 글 작성 예제: https://github.com/OUS-KR/BLE.KR/issues/3
+  - 동일한 글 경로 존재 시 덮어쓰기
+  - 글 경로 미입력 시 `BLE.KR/u/{사용자 아이디}/` 페이지 수정
+- `BLE.KR/@{사용자 아이디}/{글 경로}` 형태의 짧은 주소 지원
+  - 사용자 글 예제: [BLE.KR/@ble/articles/example](https://ble.kr/@ble/articles/example)
  
 ### [사용자 메뉴 설정](https://github.com/OUS-KR/BLE.KR/issues/new?template=04-user-menu-setting-by-issue.yml)
 
