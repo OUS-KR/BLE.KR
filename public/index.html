@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLE — ble.kr · The Suffix of Possibility</title>
+  <meta name="description" content="ble.kr — The domain of capability, possibility, and potential. The suffix -ble (-able/-ible) that declares what can be, what is worthy, what is within reach." />
+
+  <!-- Tailwind CSS 4.0 via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,300;0,600;1,300;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style type="text/tailwindcss">
+    @theme {
+      /* ── Color tokens — Capability & Horizon palette ── */
+      --color-cap-50:  #f0f6ff;
+      --color-cap-100: #ddeeff;
+      --color-cap-200: #bad8ff;
+      --color-cap-300: #8caccc;
+      --color-cap-400: #6090b8;
+      --color-cap-500: #3870a0;
+      --color-cap-600: #285888;
+      --color-cap-700: #1c4070;
+      --color-cap-800: #122c58;
+      --color-cap-900: #0a1c40;
+
+      --color-teal-50:  #edfaf8;
+      --color-teal-100: #d4f4f0;
+      --color-teal-200: #a8e8e0;
+      --color-teal-300: #70d4cc;
+      --color-teal-400: #2ab4a0;
+      --color-teal-500: #1a9888;
+      --color-teal-600: #107c70;
+      --color-teal-700: #0a6058;
+      --color-teal-800: #064844;
+      --color-teal-900: #033430;
+
+      --color-kinetic-50:  #eef2ff;
+      --color-kinetic-100: #dce5ff;
+      --color-kinetic-200: #b8caff;
+      --color-kinetic-300: #88a4ff;
+      --color-kinetic-400: #5478f4;
+      --color-kinetic-500: #1848c8;
+      --color-kinetic-600: #1038a8;
+      --color-kinetic-700: #0c2c88;
+      --color-kinetic-800: #082068;
+      --color-kinetic-900: #04144c;
+
+      --color-horizon-50:  #f8fcff;
+      --color-horizon-100: #f0f8ff;
+      --color-horizon-200: #deeeff;
+      --color-horizon-300: #c4deff;
+      --color-horizon-400: #a0c8f8;
+      --color-horizon-500: #78aee8;
+      --color-horizon-600: #5090d0;
+      --color-horizon-700: #3470b0;
+      --color-horizon-800: #1c5090;
+      --color-horizon-900: #0e3470;
+
+      --color-void-950: #02040c;
+      --color-void-900: #060c18;
+      --color-void-800: #0a1224;
+      --color-void-700: #101c34;
+      --color-void-600: #182848;
+
+      /* ── Typography tokens ── */
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-serif:   'Fraunces', Georgia, serif;
+      --font-mono:    'Space Mono', monospace;
+    }
+
+    @layer base {
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background-color: #060c18;
+        color: #e8f0fc;
+        font-family: var(--font-display);
+        overflow-x: hidden;
+      }
+      ::selection {
+        background: rgba(42,180,160,0.35);
+        color: #edfaf8;
+      }
+    }
+
+    @layer components {
+
+      /* ── Canvas & Overlays ── */
+      .ble-canvas {
+        position: fixed; inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none; z-index: 0;
+      }
+      .horizon-grid {
+        position: fixed; inset: 0; z-index: 1;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(42,180,160,0.038) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(42,180,160,0.038) 1px, transparent 1px);
+        background-size: 64px 64px;
+      }
+      .possibility-overlay {
+        position: fixed; inset: 0; z-index: 1; pointer-events: none;
+        background:
+          radial-gradient(ellipse 80% 56% at 8% 4%,  rgba(24,72,200,0.10) 0%, transparent 65%),
+          radial-gradient(ellipse 60% 48% at 92% 94%, rgba(42,180,160,0.07) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 40% at 50% 50%, rgba(140,172,204,0.04) 0%, transparent 70%);
+      }
+      .vignette {
+        position: fixed; inset: 0; z-index: 1; pointer-events: none;
+        background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 38%, rgba(6,12,24,0.93) 100%);
+      }
+
+      /* ── Header ── */
+      .site-header {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        padding: 0 2rem; height: 64px;
+        display: flex; align-items: center; justify-content: space-between;
+        background: rgba(6,12,24,0.80);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(42,180,160,0.16);
+      }
+      .logo-mark { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+      .logo-icon {
+        width: 36px; height: 36px; border-radius: 8px;
+        background: linear-gradient(135deg, #1848c8 0%, #2ab4a0 100%);
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+        color: #f0f8ff; letter-spacing: 0.04em;
+        position: relative; overflow: hidden;
+        box-shadow: 0 0 16px rgba(42,180,160,0.22);
+      }
+      .logo-icon::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.20) 0%, transparent 55%);
+      }
+      .logo-text {
+        font-family: var(--font-mono); font-size: 17px; font-weight: 700;
+        color: #70d4cc; letter-spacing: 0.08em;
+      }
+      .domain-badge {
+        padding: 4px 14px; border-radius: 20px;
+        background: rgba(42,180,160,0.12);
+        border: 1px solid rgba(42,180,160,0.30);
+        font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+        color: #70d4cc; letter-spacing: 0.10em;
+        backdrop-filter: blur(8px);
+      }
+      .header-nav { display: flex; align-items: center; gap: 2rem; }
+      .nav-link {
+        font-size: 12px; color: rgba(112,212,204,0.48);
+        text-decoration: none; letter-spacing: 0.10em;
+        text-transform: uppercase; transition: color 0.2s;
+      }
+      .nav-link:hover { color: #70d4cc; }
+
+      /* ── Hero ── */
+      .hero-section {
+        position: relative; z-index: 10;
+        min-height: 100vh;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 120px 2rem 80px; text-align: center; overflow: hidden;
+      }
+      .hero-bg-text {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-display); font-weight: 700;
+        font-size: clamp(130px, 26vw, 340px);
+        color: rgba(42,180,160,0.042);
+        letter-spacing: 0.12em; pointer-events: none; user-select: none;
+        animation: horizonShift 20s ease-in-out infinite alternate;
+      }
+      @keyframes horizonShift {
+        0%   { transform: scale(1.00) translateY( 1%); opacity: 0.72; }
+        50%  { transform: scale(1.03) translateY( 0%); opacity: 1.00; }
+        100% { transform: scale(1.06) translateY(-1%); opacity: 0.80; }
+      }
+
+      /* Horizon arc */
+      .horizon-arc {
+        position: absolute;
+        width: 400px; height: 200px;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -30%);
+        pointer-events: none; z-index: 1;
+        border-radius: 200px 200px 0 0;
+        border: 1px solid rgba(42,180,160,0.14);
+        border-bottom: none;
+        overflow: visible;
+      }
+      .horizon-arc::before {
+        content: '';
+        position: absolute; inset: 20px; bottom: -20px;
+        border-radius: 200px 200px 0 0;
+        border: 1px dashed rgba(24,72,200,0.10);
+        border-bottom: none;
+      }
+      .horizon-arc::after {
+        content: '';
+        position: absolute; inset: -20px; bottom: 20px;
+        border-radius: 200px 200px 0 0;
+        border: 1px solid rgba(140,172,204,0.08);
+        border-bottom: none;
+      }
+
+      .hero-badge {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        padding: 6px 18px; border-radius: 24px;
+        border: 1px solid rgba(42,180,160,0.36);
+        background: rgba(42,180,160,0.09);
+        font-family: var(--font-mono); font-size: 10px; font-weight: 400;
+        color: #70d4cc; letter-spacing: 0.20em; text-transform: uppercase;
+        margin-bottom: 2rem; backdrop-filter: blur(8px);
+        position: relative; z-index: 2;
+      }
+      .badge-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: #2ab4a0;
+        animation: pulseDot 2.2s ease-in-out infinite;
+      }
+      @keyframes pulseDot {
+        0%,100% { transform: scale(1);   opacity: 1;   box-shadow: 0 0 0 0   rgba(42,180,160,0.45); }
+        50%      { transform: scale(1.6); opacity: 0.55; box-shadow: 0 0 0 7px rgba(42,180,160,0); }
+      }
+
+      .hero-suffix {
+        font-family: var(--font-display); font-weight: 700;
+        font-size: clamp(76px, 15vw, 188px);
+        line-height: 0.88; letter-spacing: 0.10em;
+        background: linear-gradient(135deg, #8caccc 0%, #2ab4a0 35%, #f0f8ff 65%, #1848c8 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem; position: relative; z-index: 2;
+      }
+      .hero-suffix .dash { -webkit-text-fill-color: rgba(140,172,204,0.26); }
+
+      /* -able / -ible duality label */
+      .duality-row {
+        display: flex; align-items: center; justify-content: center;
+        gap: 0.75rem; margin-bottom: 1.5rem;
+        position: relative; z-index: 2;
+      }
+      .duality-chip {
+        padding: 4px 14px; border-radius: 16px;
+        font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+        letter-spacing: 0.06em;
+      }
+      .duality-chip.able  { background: rgba(24,72,200,0.14); border: 1px solid rgba(24,72,200,0.32); color: #88a4ff; }
+      .duality-chip.ible  { background: rgba(42,180,160,0.14); border: 1px solid rgba(42,180,160,0.32); color: #70d4cc; }
+      .duality-divider { font-family: var(--font-mono); font-size: 14px; color: rgba(232,240,252,0.30); }
+
+      .hero-origin {
+        font-size: 12px; color: rgba(112,212,204,0.36);
+        letter-spacing: 0.24em; text-transform: uppercase;
+        margin-bottom: 1.5rem; position: relative; z-index: 2;
+        font-family: var(--font-mono);
+      }
+      .hero-meaning {
+        font-family: var(--font-serif);
+        font-size: clamp(20px, 3vw, 34px); font-style: italic;
+        color: #c4deff; margin-bottom: 1.5rem;
+        max-width: 660px; line-height: 1.48;
+        position: relative; z-index: 2;
+      }
+      .hero-quote {
+        font-size: 14px; color: rgba(232,240,252,0.36);
+        max-width: 540px; line-height: 1.84; margin-bottom: 2.5rem;
+        font-style: italic; position: relative; z-index: 2;
+      }
+      .hero-words {
+        display: flex; flex-wrap: wrap; gap: 0.6rem;
+        justify-content: center; margin-bottom: 3rem;
+        max-width: 740px; position: relative; z-index: 2;
+      }
+      .word-pill {
+        padding: 5px 14px; border-radius: 20px;
+        font-size: 12px; font-weight: 500;
+        letter-spacing: 0.04em; transition: all 0.25s; cursor: default;
+      }
+      .word-pill.able  { background: rgba(24,72,200,0.09); border: 1px solid rgba(24,72,200,0.22); color: #88a4ff; }
+      .word-pill.ible  { background: rgba(42,180,160,0.09); border: 1px solid rgba(42,180,160,0.22); color: #70d4cc; }
+      .word-pill.able:hover  { background: rgba(24,72,200,0.20); border-color: rgba(136,164,255,0.48); color: #dce5ff; transform: translateY(-2px); }
+      .word-pill.ible:hover  { background: rgba(42,180,160,0.20); border-color: rgba(112,212,204,0.48); color: #d4f4f0; transform: translateY(-2px); }
+
+      .hero-cta {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        padding: 13px 34px; border-radius: 30px;
+        background: linear-gradient(135deg, #1848c8 0%, #2ab4a0 100%);
+        color: #f0f8ff; font-size: 13px; font-weight: 700;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        text-decoration: none; transition: all 0.3s;
+        box-shadow: 0 4px 24px rgba(42,180,160,0.26);
+        position: relative; z-index: 2;
+        font-family: var(--font-display);
+      }
+      .hero-cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 38px rgba(24,72,200,0.36);
+      }
+
+      /* ── Stats ── */
+      .stats-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 960px; margin: 0 auto;
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+      }
+      .stat-card {
+        text-align: center; padding: 2rem 1.5rem; border-radius: 16px;
+        background: rgba(42,180,160,0.055);
+        border: 1px solid rgba(42,180,160,0.14);
+        backdrop-filter: blur(12px); transition: transform 0.3s;
+      }
+      .stat-card:hover { transform: translateY(-4px); }
+      .stat-number {
+        font-family: var(--font-mono); font-weight: 700;
+        font-size: clamp(28px, 4.5vw, 48px);
+        background: linear-gradient(135deg, #8caccc, #2ab4a0);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text; line-height: 1; margin-bottom: 0.5rem;
+        letter-spacing: 0.04em;
+      }
+      .stat-label {
+        font-size: 11px; color: rgba(112,212,204,0.42);
+        letter-spacing: 0.14em; text-transform: uppercase;
+      }
+
+      /* ── Section common ── */
+      .section-label {
+        font-size: 10px; color: rgba(42,180,160,0.52);
+        letter-spacing: 0.28em; text-transform: uppercase;
+        margin-bottom: 3rem; text-align: center;
+        font-family: var(--font-mono);
+      }
+      .section-title {
+        font-family: var(--font-display); font-weight: 700;
+        font-size: clamp(26px, 4.5vw, 50px);
+        color: #c4deff; text-align: center;
+        margin-bottom: 0.6rem; letter-spacing: 0.02em;
+      }
+      .section-subtitle {
+        font-size: 14px; color: rgba(232,240,252,0.36);
+        text-align: center; max-width: 480px;
+        margin: 0 auto 3rem; line-height: 1.75;
+      }
+
+      /* ── Dual Face — able/ible comparison ── */
+      .dual-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 960px; margin: 0 auto;
+      }
+      .dual-grid {
+        display: grid; grid-template-columns: 1fr auto 1fr; gap: 0;
+        align-items: stretch; margin-top: 3rem;
+      }
+      .dual-card {
+        padding: 2.5rem 2rem; border-radius: 20px;
+        background: rgba(10,18,36,0.88);
+        backdrop-filter: blur(16px);
+        position: relative; overflow: hidden; transition: all 0.30s;
+      }
+      .dual-card.able-card {
+        border: 1px solid rgba(24,72,200,0.22);
+        border-radius: 20px 0 0 20px;
+      }
+      .dual-card.ible-card {
+        border: 1px solid rgba(42,180,160,0.22);
+        border-radius: 0 20px 20px 0;
+      }
+      .dual-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      }
+      .dual-card.able-card::before { background: linear-gradient(90deg, transparent, rgba(24,72,200,0.65), transparent); }
+      .dual-card.ible-card::before { background: linear-gradient(90deg, transparent, rgba(42,180,160,0.65), transparent); }
+      .dual-card:hover { transform: translateY(-4px); }
+      .dual-card.able-card:hover  { box-shadow: 0 14px 44px rgba(24,72,200,0.12); border-color: rgba(136,164,255,0.36); }
+      .dual-card.ible-card:hover  { box-shadow: 0 14px 44px rgba(42,180,160,0.12); border-color: rgba(112,212,204,0.36); }
+      .dual-divider {
+        display: flex; align-items: center; justify-content: center;
+        width: 60px; flex-shrink: 0;
+        background: rgba(10,18,36,0.88);
+        border-top: 1px solid rgba(42,180,160,0.12);
+        border-bottom: 1px solid rgba(42,180,160,0.12);
+        position: relative;
+      }
+      .dual-divider::before {
+        content: '=';
+        font-family: var(--font-mono); font-size: 20px; font-weight: 700;
+        color: rgba(232,240,252,0.18); letter-spacing: 0;
+      }
+      .dual-label {
+        font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+        letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 0.75rem;
+      }
+      .dual-label.able  { color: rgba(24,72,200,0.75); }
+      .dual-label.ible  { color: rgba(42,180,160,0.75); }
+      .dual-form {
+        font-family: var(--font-mono); font-size: 36px; font-weight: 700;
+        letter-spacing: 0.04em; margin-bottom: 0.6rem;
+      }
+      .dual-form.able  { color: #88a4ff; }
+      .dual-form.ible  { color: #70d4cc; }
+      .dual-origin { font-size: 12px; margin-bottom: 1rem; font-style: italic; font-family: var(--font-serif); }
+      .dual-origin.able  { color: rgba(136,164,255,0.55); }
+      .dual-origin.ible  { color: rgba(112,212,204,0.55); }
+      .dual-desc { font-size: 13px; color: rgba(232,240,252,0.48); line-height: 1.72; margin-bottom: 1.25rem; }
+      .dual-rule {
+        font-family: var(--font-mono); font-size: 11px; line-height: 1.6;
+        padding: 0.75rem 1rem; border-radius: 10px;
+        color: rgba(232,240,252,0.50);
+      }
+      .dual-rule.able  { background: rgba(24,72,200,0.10); border-left: 2px solid rgba(24,72,200,0.35); }
+      .dual-rule.ible  { background: rgba(42,180,160,0.10); border-left: 2px solid rgba(42,180,160,0.35); }
+      .dual-words { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+      .mini-chip {
+        padding: 3px 10px; border-radius: 12px;
+        font-size: 11px; font-style: italic;
+        font-family: var(--font-serif); color: #e8f0fc;
+      }
+      .mini-chip.able  { background: rgba(24,72,200,0.12); border: 1px solid rgba(24,72,200,0.22); }
+      .mini-chip.ible  { background: rgba(42,180,160,0.12); border: 1px solid rgba(42,180,160,0.22); }
+
+      /* ── Feature Cards ── */
+      .features-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 960px; margin: 0 auto;
+      }
+      .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+      .feature-card {
+        padding: 2.5rem 2rem; border-radius: 20px;
+        background: rgba(10,18,36,0.78);
+        border: 1px solid rgba(42,180,160,0.12);
+        backdrop-filter: blur(16px); transition: all 0.30s;
+        position: relative; overflow: hidden;
+      }
+      .feature-card::after {
+        content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(42,180,160,0.42), rgba(24,72,200,0.38), transparent);
+        opacity: 0; transition: opacity 0.3s;
+      }
+      .feature-card:hover::after { opacity: 1; }
+      .feature-card:hover {
+        border-color: rgba(112,212,204,0.30); transform: translateY(-4px);
+        box-shadow: 0 18px 52px rgba(42,180,160,0.09);
+      }
+      .feature-icon { font-size: 30px; margin-bottom: 1.25rem; display: block; }
+      .feature-title {
+        font-family: var(--font-display); font-size: 15px; font-weight: 700;
+        color: #70d4cc; letter-spacing: 0.08em; margin-bottom: 0.75rem; text-transform: uppercase;
+      }
+      .feature-desc { font-size: 13px; color: rgba(232,240,252,0.48); line-height: 1.75; }
+
+      /* ── Five Meanings ── */
+      .meanings-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 960px; margin: 0 auto;
+      }
+      .meanings-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 3rem; }
+      .meaning-card {
+        padding: 1.75rem 1.25rem; border-radius: 16px;
+        background: rgba(10,18,36,0.82);
+        border: 1px solid rgba(42,180,160,0.11);
+        text-align: center; transition: all 0.25s; cursor: default;
+        position: relative; overflow: hidden;
+      }
+      .meaning-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(42,180,160,0.50), transparent);
+        opacity: 0; transition: opacity 0.25s;
+      }
+      .meaning-card:hover::before { opacity: 1; }
+      .meaning-card:hover { border-color: rgba(42,180,160,0.30); background: rgba(42,180,160,0.07); transform: translateY(-3px); }
+      .meaning-num {
+        font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+        color: rgba(42,180,160,0.45); letter-spacing: 0.16em;
+        margin-bottom: 0.5rem;
+      }
+      .meaning-label {
+        font-family: var(--font-display); font-size: 13px; font-weight: 700;
+        color: #70d4cc; letter-spacing: 0.06em; margin-bottom: 0.5rem;
+        text-transform: uppercase;
+      }
+      .meaning-desc { font-size: 11px; color: rgba(232,240,252,0.42); line-height: 1.55; margin-bottom: 0.6rem; }
+      .meaning-ex { font-size: 11px; font-style: italic; font-family: var(--font-serif); color: rgba(112,212,204,0.58); }
+
+      /* ── Etymology Timeline ── */
+      .etymology-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 800px; margin: 0 auto;
+      }
+      .etym-timeline { position: relative; padding-left: 2.5rem; margin-top: 3rem; }
+      .etym-timeline::before {
+        content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 1px;
+        background: linear-gradient(to bottom, transparent, rgba(42,180,160,0.45) 15%, rgba(24,72,200,0.35) 55%, rgba(140,172,204,0.25) 85%, transparent);
+      }
+      .etym-step { position: relative; margin-bottom: 2.75rem; }
+      .etym-step::before {
+        content: ''; position: absolute; left: -2.1rem; top: 5px;
+        width: 10px; height: 10px; border-radius: 50%;
+        background: linear-gradient(135deg, #2ab4a0, #1848c8);
+        box-shadow: 0 0 14px rgba(42,180,160,0.52);
+      }
+      .etym-era { font-size: 10px; color: #2ab4a0; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 700; font-family: var(--font-mono); }
+      .etym-form { font-family: var(--font-serif); font-size: 24px; font-style: italic; color: #c4deff; margin-bottom: 0.4rem; }
+      .etym-note { font-size: 13px; color: rgba(232,240,252,0.42); line-height: 1.72; }
+
+      /* ── Word Gallery ── */
+      .gallery-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 960px; margin: 0 auto;
+      }
+      .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
+      .gallery-card {
+        padding: 1.5rem 1.25rem; border-radius: 14px;
+        background: rgba(10,18,36,0.84);
+        text-align: center; transition: all 0.25s; cursor: default;
+        position: relative; overflow: hidden;
+      }
+      .gallery-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        opacity: 0; transition: opacity 0.25s;
+      }
+      .gallery-card.a-card { border: 1px solid rgba(24,72,200,0.12); }
+      .gallery-card.i-card { border: 1px solid rgba(42,180,160,0.12); }
+      .gallery-card.a-card::before { background: linear-gradient(90deg, transparent, rgba(24,72,200,0.55), transparent); }
+      .gallery-card.i-card::before { background: linear-gradient(90deg, transparent, rgba(42,180,160,0.55), transparent); }
+      .gallery-card:hover::before { opacity: 1; }
+      .gallery-card.a-card:hover { border-color: rgba(24,72,200,0.36); background: rgba(24,72,200,0.08); transform: translateY(-3px); }
+      .gallery-card.i-card:hover { border-color: rgba(42,180,160,0.36); background: rgba(42,180,160,0.08); transform: translateY(-3px); }
+      .gallery-word { font-family: var(--font-serif); font-size: 16px; font-style: italic; color: #c4deff; margin-bottom: 0.3rem; }
+      .gallery-tag {
+        font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+        letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.3rem;
+      }
+      .gallery-card.a-card .gallery-tag { color: rgba(24,72,200,0.52); }
+      .gallery-card.i-card .gallery-tag { color: rgba(42,180,160,0.52); }
+      .gallery-gloss { font-size: 10px; color: rgba(232,240,252,0.36); letter-spacing: 0.03em; line-height: 1.4; }
+
+      /* ── Codex Box ── */
+      .codex-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 800px; margin: 0 auto;
+      }
+      .codex-box {
+        padding: 2.5rem 3rem; border-radius: 20px;
+        background: rgba(42,180,160,0.055);
+        border: 1px solid rgba(42,180,160,0.22);
+        backdrop-filter: blur(20px); position: relative; overflow: hidden;
+      }
+      .codex-box::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(42,180,160,0.62), rgba(24,72,200,0.45), transparent);
+      }
+      .codex-header { font-family: var(--font-mono); font-size: 10px; color: rgba(42,180,160,0.50); letter-spacing: 0.26em; text-transform: uppercase; margin-bottom: 2rem; }
+      .codex-row { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(42,180,160,0.08); font-size: 13px; }
+      .codex-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+      .codex-key { font-family: var(--font-mono); color: rgba(112,212,204,0.58); letter-spacing: 0.08em; min-width: 150px; font-weight: 400; flex-shrink: 0; }
+      .codex-val { color: rgba(232,240,252,0.70); line-height: 1.62; }
+      .codex-val em { color: #70d4cc; font-style: normal; font-weight: 600; }
+
+      /* ── Suffix Series ── */
+      .series-section {
+        position: relative; z-index: 10;
+        padding: 4rem 2rem; max-width: 1060px; margin: 0 auto;
+      }
+      .series-grid {
+        display: grid; grid-template-columns: repeat(8, 1fr);
+        gap: 0.85rem; margin-top: 2.5rem;
+      }
+      .series-card {
+        padding: 1.4rem 0.75rem; border-radius: 14px;
+        background: rgba(10,18,36,0.78);
+        border: 1px solid rgba(42,180,160,0.10);
+        text-align: center; transition: all 0.3s;
+      }
+      .series-card.active {
+        border-color: rgba(42,180,160,0.44);
+        background: rgba(42,180,160,0.08);
+        box-shadow: 0 8px 28px rgba(42,180,160,0.12);
+      }
+      .series-suffix {
+        font-family: var(--font-mono); font-size: 18px; font-weight: 700;
+        letter-spacing: 0.04em; margin-bottom: 0.4rem;
+        background: linear-gradient(135deg, #8caccc, #2ab4a0);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .series-card.active .series-suffix {
+        background: linear-gradient(135deg, #c4deff, #70d4cc);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .series-pos   { font-size: 9px;  color:rgba(112,212,204,0.34); letter-spacing:0.10em; text-transform:uppercase; margin-bottom:0.28rem; }
+      .series-meaning { font-size: 9px; color:rgba(232,240,252,0.33); line-height:1.45; margin-bottom:0.28rem; }
+      .series-example { font-size: 9px; color:rgba(112,212,204,0.46); font-style:italic; }
+      .series-domain  { margin-top:0.5rem; font-size:8.5px; color:rgba(42,180,160,0.33); letter-spacing:0.10em; font-family:var(--font-mono); }
+
+      /* ── Origin ── */
+      .origin-section {
+        position: relative; z-index: 10;
+        padding: 6rem 2rem; max-width: 760px; margin: 0 auto; text-align: center;
+      }
+      .origin-glyph {
+        font-family: var(--font-mono); font-size: 88px; font-weight: 700;
+        line-height: 1; margin-bottom: 1.5rem; display: inline-block;
+        background: linear-gradient(135deg, #8caccc 0%, #2ab4a0 40%, #f0f8ff 70%, #1848c8 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: glyphPossible 5s ease-in-out infinite;
+      }
+      @keyframes glyphPossible {
+        0%,100% { filter: brightness(1);   opacity: 0.88; }
+        50%      { filter: brightness(1.28); opacity: 1.00; }
+      }
+      .origin-title {
+        font-family: var(--font-serif); font-size: clamp(26px, 4vw, 44px);
+        font-style: italic; color: #c4deff; margin-bottom: 1.5rem; line-height: 1.28;
+      }
+      .origin-body {
+        font-size: 15px; color: rgba(232,240,252,0.46);
+        line-height: 1.90; max-width: 630px; margin: 0 auto 2.5rem;
+      }
+
+      /* ── Contact ── */
+      .contact-section {
+        position: relative; z-index: 10;
+        padding: 6rem 2rem; text-align: center;
+      }
+      .contact-title {
+        font-family: var(--font-display); font-size: clamp(30px, 5vw, 58px); font-weight: 700;
+        color: #c4deff; margin-bottom: 1rem; letter-spacing: 0.04em;
+      }
+      .contact-sub {
+        font-size: 14px; color: rgba(232,240,252,0.34); margin-bottom: 2.5rem;
+        max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.75;
+      }
+      .contact-email {
+        display: inline-flex; align-items: center; gap: 0.75rem;
+        padding: 16px 42px; border-radius: 32px;
+        background: linear-gradient(135deg, #1848c8 0%, #2ab4a0 100%);
+        color: #f0f8ff; font-size: 16px; font-weight: 600;
+        text-decoration: none; letter-spacing: 0.04em;
+        transition: all 0.3s;
+        box-shadow: 0 4px 26px rgba(42,180,160,0.26);
+        font-family: var(--font-mono);
+      }
+      .contact-email:hover { transform: translateY(-3px); box-shadow: 0 10px 44px rgba(24,72,200,0.36); }
+
+      /* ── Footer ── */
+      .site-footer {
+        position: relative; z-index: 10; padding: 2rem; text-align: center;
+        border-top: 1px solid rgba(42,180,160,0.09);
+        font-size: 11px; color: rgba(232,240,252,0.20); letter-spacing: 0.12em;
+        font-family: var(--font-mono);
+      }
+
+      /* ── Fade-up ── */
+      .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.72s ease, transform 0.72s ease; }
+      .fade-up.visible { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="ble-canvas" class="ble-canvas"></canvas>
+  <div class="horizon-grid"></div>
+  <div class="possibility-overlay"></div>
+  <div class="vignette"></div>
+
+  <!-- ═══════════════════════════════
+       HEADER
+  ═══════════════════════════════ -->
+  <header class="site-header">
+    <a href="/" class="logo-mark">
+      <div class="logo-icon">BLE</div>
+      <span class="logo-text">ble.kr</span>
+    </a>
+    <nav class="header-nav">
+      <a href="#capability" class="nav-link">Capability</a>
+      <a href="#etymology"  class="nav-link">Etymology</a>
+      <a href="#gallery"    class="nav-link">Words</a>
+      <a href="#contact"    class="nav-link">Contact</a>
+    </nav>
+    <div class="domain-badge">suffix · -ble</div>
+  </header>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ═══════════════════════════════ -->
+  <section class="hero-section">
+    <div class="hero-bg-text" aria-hidden="true">BLE</div>
+    <div class="horizon-arc" aria-hidden="true"></div>
+
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      The Suffix of Possibility
+    </div>
+
+    <div class="hero-suffix">
+      <span class="dash">—</span>ble
+    </div>
+
+    <div class="duality-row">
+      <span class="duality-chip able">-able</span>
+      <span class="duality-divider">/</span>
+      <span class="duality-chip ible">-ible</span>
+    </div>
+
+    <p class="hero-origin">PIE *-tro- · Latin -bilis · Old French -able/-ible · English -ble</p>
+
+    <p class="hero-meaning">
+      "Capable of, worthy of, able to be — the suffix that opens every verb and noun to its full potential."
+    </p>
+
+    <p class="hero-quote">
+      Of all the declarations language can make,<br/>
+      none is more fundamental than <em>possible</em>.<br/>
+      -ble is the suffix that makes that declaration —<br/>
+      attaching possibility itself to every word it touches.
+    </p>
+
+    <div class="hero-words">
+      <span class="word-pill able">remarkable</span>
+      <span class="word-pill ible">incredible</span>
+      <span class="word-pill able">adorable</span>
+      <span class="word-pill ible">flexible</span>
+      <span class="word-pill able">comfortable</span>
+      <span class="word-pill ible">irresistible</span>
+      <span class="word-pill able">valuable</span>
+      <span class="word-pill ible">invisible</span>
+      <span class="word-pill able">enjoyable</span>
+      <span class="word-pill ible">sensible</span>
+      <span class="word-pill able">sustainable</span>
+      <span class="word-pill ible">tangible</span>
+      <span class="word-pill able">reliable</span>
+      <span class="word-pill ible">feasible</span>
+      <span class="word-pill able">capable</span>
+      <span class="word-pill ible">possible</span>
+      <span class="word-pill able">durable</span>
+      <span class="word-pill ible">audible</span>
+      <span class="word-pill able">memorable</span>
+      <span class="word-pill ible">inevitable</span>
+    </div>
+
+    <a href="#contact" class="hero-cta">
+      Unlock the Possible ◈
+    </a>
+  </section>
+
+  <!-- ═══════════════════════════════
+       STATS
+  ═══════════════════════════════ -->
+  <section class="stats-section">
+    <div class="stat-card fade-up">
+      <div class="stat-number">1,000+</div>
+      <div class="stat-label">-ble adjectives in English</div>
+    </div>
+    <div class="stat-card fade-up">
+      <div class="stat-number">-bilis</div>
+      <div class="stat-label">Latin root form</div>
+    </div>
+    <div class="stat-card fade-up">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">possibilities declared</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       DUAL FACE: -able / -ible
+  ═══════════════════════════════ -->
+  <section class="dual-section" id="capability">
+    <p class="section-label">§ 01 · Two Forms, One Suffix</p>
+    <h2 class="section-title">-able and -ible: The Twin Faces of -ble</h2>
+    <p class="section-subtitle">Latin's two verb conjugation families produced two forms that English inherited as parallel spellings of a single suffix.</p>
+
+    <div class="dual-grid fade-up">
+
+      <!-- -able -->
+      <div class="dual-card able-card">
+        <div class="dual-label able">// form one</div>
+        <div class="dual-form able">-able</div>
+        <div class="dual-origin able">Latin -abilis · Old French -able</div>
+        <p class="dual-desc">Formed from Latin verbs of the 1st conjugation (stems ending in -a-). In English, -able became the default productive form, attaching freely to native English verbs and non-Latin roots — anything new in English gets -able, not -ible.</p>
+        <div class="dual-rule able">
+          Rule: Use -able with native verbs and<br/>
+          words without clear Latin roots.<br/>
+          <em style="color:#88a4ff;">readable, enjoyable, drinkable</em>
+        </div>
+        <div class="dual-words">
+          <span class="mini-chip able">adorable</span>
+          <span class="mini-chip able">comfortable</span>
+          <span class="mini-chip able">reliable</span>
+          <span class="mini-chip able">remarkable</span>
+          <span class="mini-chip able">valuable</span>
+          <span class="mini-chip able">durable</span>
+        </div>
+      </div>
+
+      <!-- divider -->
+      <div class="dual-divider"></div>
+
+      <!-- -ible -->
+      <div class="dual-card ible-card">
+        <div class="dual-label ible">// form two</div>
+        <div class="dual-form ible">-ible</div>
+        <div class="dual-origin ible">Latin -ibilis · Old French -ible</div>
+        <p class="dual-desc">Formed from Latin verbs of the 2nd, 3rd, and 4th conjugations (stems in -e-, -i-). In English, -ible appears with words of obvious Latin origin where the root stem ends in a sound that requires the -i- connector — often after -ss-, -t-, or a clear Latin verb root.</p>
+        <div class="dual-rule ible">
+          Rule: Use -ible with recognisable<br/>
+          Latin roots and -ss-, -t- stems.<br/>
+          <em style="color:#70d4cc;">visible, flexible, sensible</em>
+        </div>
+        <div class="dual-words">
+          <span class="mini-chip ible">incredible</span>
+          <span class="mini-chip ible">flexible</span>
+          <span class="mini-chip ible">invisible</span>
+          <span class="mini-chip ible">irresistible</span>
+          <span class="mini-chip ible">tangible</span>
+          <span class="mini-chip ible">possible</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       FIVE MEANINGS
+  ═══════════════════════════════ -->
+  <section class="meanings-section">
+    <p class="section-label">§ 02 · Five Declarations</p>
+    <h2 class="section-title">What -ble Can Mean</h2>
+    <p class="section-subtitle">Unlike any other suffix, -ble carries five distinct semantic shades — each a different declaration about what is within reach.</p>
+
+    <div class="meanings-grid">
+      <div class="meaning-card fade-up">
+        <div class="meaning-num">01</div>
+        <div class="meaning-label">Capable of</div>
+        <p class="meaning-desc">Can be done, can happen, within the range of possibility.</p>
+        <div class="meaning-ex">possible, feasible, doable</div>
+      </div>
+      <div class="meaning-card fade-up">
+        <div class="meaning-num">02</div>
+        <div class="meaning-label">Worthy of</div>
+        <p class="meaning-desc">Deserves the action or condition; merits the quality.</p>
+        <div class="meaning-ex">adorable, lovable, admirable</div>
+      </div>
+      <div class="meaning-card fade-up">
+        <div class="meaning-num">03</div>
+        <div class="meaning-label">Tending to</div>
+        <p class="meaning-desc">Inclined toward; has a natural disposition to do or be.</p>
+        <div class="meaning-ex">agreeable, peaceable, suitable</div>
+      </div>
+      <div class="meaning-card fade-up">
+        <div class="meaning-num">04</div>
+        <div class="meaning-label">Having quality</div>
+        <p class="meaning-desc">Possesses the characteristic of the base word in full.</p>
+        <div class="meaning-ex">comfortable, durable, flexible</div>
+      </div>
+      <div class="meaning-card fade-up">
+        <div class="meaning-num">05</div>
+        <div class="meaning-label">Requiring to be</div>
+        <p class="meaning-desc">Should or must be subjected to the action of the root.</p>
+        <div class="meaning-ex">accountable, taxable, punishable</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       FEATURE CARDS
+  ═══════════════════════════════ -->
+  <section class="features-section">
+    <p class="section-label">§ 03 · Defining Properties</p>
+    <h2 class="section-title">The Architecture of -ble</h2>
+    <p class="section-subtitle">Three principles that make -ble the most dynamic and range-spanning suffix in this collection.</p>
+
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <span class="feature-icon">⚙️</span>
+        <div class="feature-title">PIE Tool Suffix</div>
+        <p class="feature-desc">-ble traces to PIE <em style="color:#70d4cc;">*-tro-</em>, the ancient suffix for instruments and tools — "that by which something is done." The rudder steers; the saddle supports; the <em style="color:#70d4cc;">-ble</em> adjective declares the instrument of possibility itself. It is the oldest concept of capability in the language.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <span class="feature-icon">🔀</span>
+        <div class="feature-title">Maximum Productivity</div>
+        <p class="feature-desc">With over 1,000 adjectives, -ble (-able/-ible) is the single most productive adjectival suffix in English — outstripping -ous, -ful, -ive, and all others. Every new verb in English automatically generates a -able form. The suffix never stops growing.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <span class="feature-icon">↔️</span>
+        <div class="feature-title">Negation Symmetry</div>
+        <p class="feature-desc">Uniquely, -ble pairs with two negating prefixes: <em style="color:#70d4cc;">un-</em> (for native -able words: <em>unforgettable</em>) and <em style="color:#70d4cc;">in-/im-/ir-</em> (for Latin -ible words: <em>incredible, impossible, irresistible</em>). The suffix generates its own antonym system — a complete semantic universe in both directions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       ETYMOLOGY TIMELINE
+  ═══════════════════════════════ -->
+  <section class="etymology-section" id="etymology">
+    <p class="section-label" style="text-align:center;">§ 04 · Etymology</p>
+    <h2 class="section-title" style="font-size:clamp(24px,3.8vw,46px);margin-bottom:0;">From *-tro- to -ble</h2>
+
+    <div class="etym-timeline">
+
+      <div class="etym-step fade-up">
+        <div class="etym-era">Proto-Indo-European · c. 4000 BCE</div>
+        <div class="etym-form">*-tro- / *-dhro- "instrument suffix"</div>
+        <div class="etym-note">
+          The deepest root of -ble is PIE <em>*-tro-</em>, an instrument-forming suffix meaning "that by which something is done." It produced concrete tool words across the family: Proto-Germanic <em>*rōþrą</em> (rudder — "that by which one steers") and <em>*saðulą</em> (saddle — "that by which one sits"). In Latin, this root shifted toward forming ability adjectives — "that which can be done" — a profound semantic evolution from tool to possibility.
+        </div>
+      </div>
+
+      <div class="etym-step fade-up">
+        <div class="etym-era">Classical Latin · c. 200 BCE – 200 CE</div>
+        <div class="etym-form">-bilis → -abilis / -ibilis</div>
+        <div class="etym-note">
+          Latin developed the core suffix <em>-bilis</em> into two forms governed by verb conjugation: <em>-abilis</em> (1st conjugation, stem in -a-) and <em>-ibilis</em> (2nd, 3rd, 4th conjugation, stem in -e- or -i-). These formed verbal adjectives meaning "able to be ___ed" or "capable of ___ing." Key Latin forms: <em>amābilis</em> (lovable), <em>portābilis</em> (portable), <em>crēdibilis</em> (credible), <em>possibilis</em> (possible), <em>flēbilis</em> (lamentable).
+        </div>
+      </div>
+
+      <div class="etym-step fade-up">
+        <div class="etym-era">Old French · c. 900–1200 CE</div>
+        <div class="etym-form">-able / -ible (both preserved)</div>
+        <div class="etym-note">
+          French preserved the Latin distinction: -abilis became <em>-able</em> (as in <em>aimable</em>, <em>notable</em>, <em>raisonnable</em>) while -ibilis became <em>-ible</em> (as in <em>visible</em>, <em>possible</em>, <em>terrible</em>). Both forms entered English after the Norman Conquest of 1066, flooding the language with capability adjectives across law, theology, and administration.
+        </div>
+      </div>
+
+      <div class="etym-step fade-up">
+        <div class="etym-era">Middle English · c. 1200–1500 CE</div>
+        <div class="etym-form">-able / -ible (differentiation begins)</div>
+        <div class="etym-note">
+          In Middle English, the -able/-ible distinction was maintained but began to blur. More significantly, -able started attaching to native English verbs for the first time — a critical moment when a Latin-origin suffix crossed the language barrier. Early examples: <em>drinkable</em> (c. 1380), <em>readable</em> (c. 1400), <em>knowable</em> (c. 1300). The suffix was naturalising into English.
+        </div>
+      </div>
+
+      <div class="etym-step fade-up">
+        <div class="etym-era">Modern English · 1500 CE → present</div>
+        <div class="etym-form">-able (dominant) / -ible (legacy)</div>
+        <div class="etym-note">
+          Modern English established -able as the default productive form for new coinages, while -ible became a fixed set of Latin-origin words. New verbs automatically take -able: <em>clickable</em> (1990s), <em>streamable</em> (2000s), <em>swipeable</em> (2010s), <em>downloadable</em> (1980s). The combined -ble system now exceeds 1,000 English adjectives — by far the most productive adjectival suffix in the language.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       WORD GALLERY
+  ═══════════════════════════════ -->
+  <section class="gallery-section" id="gallery">
+    <p class="section-label">§ 05 · Word Gallery</p>
+    <h2 class="section-title" style="font-size:clamp(24px,3.8vw,46px);">Twenty Possibilities</h2>
+    <p class="section-subtitle">Ten -able, ten -ible — twenty declarations of what can be, what is worthy, what lies within reach.</p>
+
+    <div class="gallery-grid">
+      <!-- -able -->
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">remarkable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">worthy of being remarked</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">adorable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">worthy of adoration</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">valuable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">capable of being valued</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">comfortable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">capable of giving comfort</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">reliable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">worthy of being relied on</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">sustainable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">capable of being sustained</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">durable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">capable of lasting long</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">memorable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">worthy of being remembered</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">enjoyable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">capable of giving enjoyment</div>
+      </div>
+      <div class="gallery-card a-card fade-up">
+        <div class="gallery-word">capable</div>
+        <div class="gallery-tag">-able</div>
+        <div class="gallery-gloss">able to do; having capacity</div>
+      </div>
+      <!-- -ible -->
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">incredible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">not capable of being believed</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">flexible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">capable of being bent</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">possible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">capable of happening</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">tangible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">capable of being touched</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">sensible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">capable of being sensed</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">irresistible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">not capable of resisting</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">invisible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">not capable of being seen</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">audible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">capable of being heard</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">inevitable</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">not capable of being avoided</div>
+      </div>
+      <div class="gallery-card i-card fade-up">
+        <div class="gallery-word">feasible</div>
+        <div class="gallery-tag">-ible</div>
+        <div class="gallery-gloss">capable of being done</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       CODEX BOX
+  ═══════════════════════════════ -->
+  <section class="codex-section">
+    <div class="codex-box fade-up">
+      <div class="codex-header">// Lexical Profile · ble.kr · B01–B05</div>
+      <div class="codex-row">
+        <span class="codex-key">suffix</span>
+        <span class="codex-val"><em>-ble</em> — adjectival suffix; manifests as <em>-able</em> (native/1st-conjugation) and <em>-ible</em> (Latin 2nd–4th conjugation) in English</span>
+      </div>
+      <div class="codex-row">
+        <span class="codex-key">origin</span>
+        <span class="codex-val">PIE <em>*-tro-</em> → Latin <em>-bilis</em> (<em>-abilis / -ibilis</em>) → Old French <em>-able / -ible</em> → Middle English → English <em>-ble</em></span>
+      </div>
+      <div class="codex-row">
+        <span class="codex-key">function</span>
+        <span class="codex-val">Forms <em>adjectives</em> from verbs and nouns meaning "capable of, worthy of, tending to, having the quality of, or requiring to be ___ed"</span>
+      </div>
+      <div class="codex-row">
+        <span class="codex-key">negation</span>
+        <span class="codex-val"><em>un-</em> + -able (native words): <em>unforgettable</em>; <em>in-/im-/ir-</em> + -ible (Latin words): <em>incredible, impossible, irresistible</em></span>
+      </div>
+      <div class="codex-row">
+        <span class="codex-key">productivity</span>
+        <span class="codex-val"><em>Highest of all English adjectival suffixes</em> — 1,000+ adjectives; -able forms attach to any new English verb: <em>clickable, streamable, swipeable</em></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       SUFFIX SERIES
+  ═══════════════════════════════ -->
+  <section class="series-section">
+    <p class="section-label" style="text-align:center;">§ 06 · Suffix Series</p>
+    <h2 class="section-title" style="font-size:clamp(22px,3.5vw,42px);margin-bottom:0.5rem;">The Language Collection</h2>
+    <p class="section-subtitle">Nine companion domains mapping the suffix landscape of English.</p>
+
+    <div class="series-grid">
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ous</div>
+        <div class="series-pos">adj</div>
+        <div class="series-meaning">full of</div>
+        <div class="series-example">glorious</div>
+        <div class="series-domain">ous.kr</div>
+      </div>
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ize</div>
+        <div class="series-pos">verb</div>
+        <div class="series-meaning">to make</div>
+        <div class="series-example">organize</div>
+        <div class="series-domain">ize.kr</div>
+      </div>
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ive</div>
+        <div class="series-pos">adj</div>
+        <div class="series-meaning">tending to</div>
+        <div class="series-example">creative</div>
+        <div class="series-domain">ive.kr</div>
+      </div>
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ity</div>
+        <div class="series-pos">noun</div>
+        <div class="series-meaning">state / quality</div>
+        <div class="series-example">clarity</div>
+        <div class="series-domain">ity.kr</div>
+      </div>
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ify</div>
+        <div class="series-pos">verb</div>
+        <div class="series-meaning">to cause to be</div>
+        <div class="series-example">clarify</div>
+        <div class="series-domain">ify.kr</div>
+      </div>
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ial</div>
+        <div class="series-pos">adj</div>
+        <div class="series-meaning">of / relating</div>
+        <div class="series-example">celestial</div>
+        <div class="series-domain">ial.kr</div>
+      </div>
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ful</div>
+        <div class="series-pos">adj</div>
+        <div class="series-meaning">full of</div>
+        <div class="series-example">beautiful</div>
+        <div class="series-domain">ful.kr</div>
+      </div>
+      <div class="series-card fade-up">
+        <div class="series-suffix">-ary</div>
+        <div class="series-pos">adj·noun</div>
+        <div class="series-meaning">of / place</div>
+        <div class="series-example">visionary</div>
+        <div class="series-domain">ary.kr</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-top:0.85rem;">
+      <div class="series-card active fade-up" style="min-width:148px;max-width:190px;">
+        <div class="series-suffix">-ble</div>
+        <div class="series-pos">adj</div>
+        <div class="series-meaning">capable / worthy of</div>
+        <div class="series-example">possible</div>
+        <div class="series-domain">ble.kr · current</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       ORIGIN NARRATIVE
+  ═══════════════════════════════ -->
+  <section class="origin-section">
+    <div class="origin-glyph fade-up">能</div>
+    <h2 class="origin-title fade-up">
+      The Suffix That Invented<br/>the Concept of Possible
+    </h2>
+    <p class="origin-body fade-up">
+      Before there was <em style="color:#70d4cc;">possible</em>, there was only what was or was not.
+      The PIE root <em style="color:#8caccc;">*-tro-</em> began as a suffix for tools — the rudder that steers,
+      the saddle that supports. But in Latin it underwent the most consequential semantic shift in the
+      history of suffixes: from "that by which something is done" to "that which <em style="color:#c4deff;">can</em> be done."
+      In that shift, <em style="color:#8caccc;">*-tro-</em> became <em style="color:#70d4cc;">-bilis</em>, and the entire
+      concept of possibility entered language as a grammatical form. Suddenly there was not just darkness —
+      there was the <em style="color:#c4deff;">credible</em>, the <em style="color:#c4deff;">visible</em>, the
+      <em style="color:#c4deff;">possible</em>. Through French the suffix crossed into English as -able and
+      -ible, then reached further — across the Germanic border, attaching to native English verbs,
+      declaring that even the most ordinary action could now have its own possibility noun.
+      <em style="color:#70d4cc;">Readable. Enjoyable. Lovable.</em> Every word a horizon opened.
+      That is what -ble has always been: not merely a suffix, but the linguistic shape of
+      <em style="color:#f0f8ff;">potential itself</em>.
+    </p>
+    <a href="#contact" class="hero-cta fade-up">
+      Inquire about ble.kr ◈
+    </a>
+  </section>
+
+  <!-- ═══════════════════════════════
+       CONTACT
+  ═══════════════════════════════ -->
+  <section class="contact-section" id="contact">
+    <h2 class="contact-title fade-up">Make It Possible</h2>
+    <p class="contact-sub fade-up">
+      Interested in ble.kr? Domain inquiries,<br/>collaborations, and language projects welcome.
+    </p>
+    <a href="mailto:hello@ble.kr" class="contact-email fade-up">
+      ◈ hello@ble.kr
+    </a>
+  </section>
+
+  <!-- ═══════════════════════════════
+       FOOTER
+  ═══════════════════════════════ -->
+  <footer class="site-footer">
+    © 2026 ble.kr · The Suffix of Possibility · *-tro- → -bilis → -able/-ible → -ble
+  </footer>
+
+
+  <!-- ═══════════════════════════════
+       PARTICLE SYSTEM
+  ═══════════════════════════════ -->
+  <script>
+  (function () {
+    'use strict';
+
+    const canvas = document.getElementById('ble-canvas');
+    const ctx    = canvas.getContext('2d');
+
+    /* ── Palette ── */
+    const TEAL    = '#2ab4a0';
+    const KINETIC = '#1848c8';
+    const CAP     = '#8caccc';
+    const HORIZON = '#c4deff';
+    const WHITE   = 'rgba(240,248,255,0.80)';
+
+    let W, H;
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    /* ════════════════════════════════
+       Layer 1 · PossibilityNode
+       Drifting nodes — capability points
+    ════════════════════════════════ */
+    class PossibilityNode {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.x      = Math.random() * W;
+        this.y      = init ? Math.random() * H : H + 10;
+        this.vx     = (Math.random() - 0.5) * 0.30;
+        this.vy     = -(0.12 + Math.random() * 0.24);
+        this.r      = 1.2 + Math.random() * 2.8;
+        this.alpha  = 0;
+        this.peak   = 0.24 + Math.random() * 0.36;
+        this.pulse  = Math.random() * Math.PI * 2;
+        this.pSpeed = 0.028 + Math.random() * 0.032;
+        const C     = [TEAL, KINETIC, CAP, HORIZON, WHITE];
+        this.col    = C[Math.floor(Math.random() * C.length)];
+        this.lifeMax= 210 + Math.random() * 160;
+        this.life   = init ? Math.random() * this.lifeMax : 0;
+        /* occasionally draw a cross-hair */
+        this.crosshair = Math.random() < 0.22;
+      }
+      update() {
+        this.life++;
+        this.pulse += this.pSpeed;
+        this.x += this.vx;
+        this.y += this.vy;
+        const t  = this.life / this.lifeMax;
+        const pl = 0.86 + Math.sin(this.pulse) * 0.14;
+        if (t < 0.12)      this.alpha = (t / 0.12) * this.peak * pl;
+        else if (t < 0.74) this.alpha = this.peak * pl;
+        else               this.alpha = this.peak * pl * (1 - (t - 0.74) / 0.26);
+        if (this.life >= this.lifeMax || this.y < -12) this.reset(false);
+      }
+      draw() {
+        if (this.alpha <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        if (this.crosshair) {
+          /* tiny crosshair */
+          ctx.strokeStyle = this.col;
+          ctx.lineWidth   = 0.7;
+          ctx.lineCap     = 'round';
+          const s = this.r * 2.5;
+          ctx.beginPath();
+          ctx.moveTo(this.x - s, this.y); ctx.lineTo(this.x + s, this.y);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y - s); ctx.lineTo(this.x, this.y + s);
+          ctx.stroke();
+          /* small circle around it */
+          ctx.globalAlpha = this.alpha * 0.45;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r * 2, 0, Math.PI * 2);
+          ctx.stroke();
+        } else {
+          /* plain dot with glow */
+          const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 3);
+          grd.addColorStop(0, this.col);
+          grd.addColorStop(1, 'transparent');
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r * 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#fff';
+          ctx.globalAlpha = this.alpha * 0.80;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    /* ════════════════════════════════
+       Layer 2 · BleWord
+       Floating -able / -ible words
+    ════════════════════════════════ */
+    const ABLE_WORDS = [
+      'remarkable','adorable','valuable','comfortable','reliable',
+      'sustainable','durable','memorable','enjoyable','capable',
+      'lovable','readable','bearable','adaptable','achievable',
+      'admirable','affordable','agreeable','applicable','approachable'
+    ];
+    const IBLE_WORDS = [
+      'incredible','flexible','possible','tangible','sensible',
+      'irresistible','invisible','audible','inevitable','feasible',
+      'responsible','accessible','convertible','compatible','credible',
+      'divisible','edible','eligible','fallible','horrible'
+    ];
+    const ALL_WORDS = [...ABLE_WORDS, ...IBLE_WORDS];
+    class BleWord {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.x    = Math.random() * W;
+        this.y    = init ? Math.random() * H : H + 28;
+        this.vy   = -(0.12 + Math.random() * 0.22);
+        this.vx   = (Math.random() - 0.5) * 0.14;
+        this.word = ALL_WORDS[Math.floor(Math.random() * ALL_WORDS.length)];
+        /* colour by type */
+        const isAble = ABLE_WORDS.includes(this.word);
+        this.col  = isAble
+          ? [KINETIC, CAP, HORIZON][Math.floor(Math.random() * 3)]
+          : [TEAL, '#70d4cc', WHITE][Math.floor(Math.random() * 3)];
+        this.size = 10 + Math.random() * 5;
+        this.alpha= 0;
+        this.peak = 0.10 + Math.random() * 0.11;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        this.alpha = Math.min(this.alpha + 0.0038, this.peak);
+        if (this.y < -42) this.reset(false);
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle   = this.col;
+        ctx.font        = `italic ${this.size}px "Fraunces", Georgia, serif`;
+        ctx.fillText(this.word, this.x, this.y);
+        ctx.restore();
+      }
+    }
+
+    /* ════════════════════════════════
+       Layer 3 · HorizonBeam
+       Thin horizontal beams drifting up
+       — like scanning lines
+    ════════════════════════════════ */
+    class HorizonBeam {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.x    = Math.random() * W;
+        this.y    = init ? Math.random() * H : H + 2;
+        this.vy   = -(0.06 + Math.random() * 0.14);
+        this.vx   = (Math.random() - 0.5) * 0.12;
+        this.len  = 14 + Math.random() * 38;
+        this.alpha= 0;
+        this.peak = 0.08 + Math.random() * 0.12;
+        const C   = [TEAL, KINETIC, CAP, '#88a4ff'];
+        this.col  = C[Math.floor(Math.random() * C.length)];
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        this.alpha = Math.min(this.alpha + 0.005, this.peak);
+        if (this.y < -4) this.reset(false);
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.strokeStyle = this.col;
+        ctx.lineWidth   = 0.7;
+        ctx.lineCap     = 'round';
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + this.len, this.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    /* ════════════════════════════════
+       Layer 4 · CapabilityRing
+       Expanding rings — possibility
+       radiating outward
+    ════════════════════════════════ */
+    class CapabilityRing {
+      constructor() { this.reset(true); }
+      reset(init) {
+        this.x    = Math.random() * W;
+        this.y    = Math.random() * H;
+        this.r    = 10 + Math.random() * 30;
+        this.maxR = this.r + 44 + Math.random() * 54;
+        this.dr   = 0.18 + Math.random() * 0.28;
+        this.baseA= 0.12 + Math.random() * 0.10;
+        const C   = [TEAL, KINETIC, CAP];
+        this.col  = C[Math.floor(Math.random() * C.length)];
+        if (init) this.r = Math.random() * this.maxR;
+        /* sometimes dashed */
+        this.dashed = Math.random() < 0.35;
+      }
+      update() {
+        this.r += this.dr;
+        if (this.r > this.maxR) this.reset(false);
+      }
+      draw() {
+        const life = 1 - (this.r - 10) / (this.maxR - 10);
+        ctx.save();
+        ctx.globalAlpha = this.baseA * life;
+        ctx.strokeStyle = this.col;
+        ctx.lineWidth   = 1;
+        if (this.dashed) ctx.setLineDash([4, 6]);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.restore();
+      }
+    }
+
+    /* ── Pools ── */
+    const nodes  = Array.from({ length: 55 }, () => new PossibilityNode());
+    const words  = Array.from({ length: 26 }, () => new BleWord());
+    const beams  = Array.from({ length: 40 }, () => new HorizonBeam());
+    const rings  = Array.from({ length: 12 }, () => new CapabilityRing());
+
+    /* ── Loop ── */
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      rings.forEach(p => { p.update(); p.draw(); });
+      beams.forEach(p => { p.update(); p.draw(); });
+      words.forEach(p => { p.update(); p.draw(); });
+      nodes.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    /* ── Scroll fade-up ── */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  })();
+  </script>
+
+</body>
+</html>
