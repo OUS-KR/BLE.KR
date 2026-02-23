@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>-ble — ble.kr</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  @theme {
+    --color-ink-950: #030208;
+    --color-ink-900: #07050f;
+    --color-ink-800: #100d1e;
+    --color-word-400: #c084fc;
+    --color-word-500: #a855f7;
+    --color-word-600: #9333ea;
+    --color-lime-300: #bef264;
+    --color-lime-400: #a3e635;
+    --color-sky-300:  #7dd3fc;
+    --color-sky-400:  #38bdf8;
+    --color-rose-300: #fda4af;
+    --color-rose-400: #fb7185;
+    --color-amber-300:#fde68a;
+    --color-amber-400:#fbbf24;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-korean: 'Noto Serif KR', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: #030208;
+    color: #e8dff8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Lexicon Background ── */
+  .lex-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(168,85,247,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(56,189,248,0.10) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 60% at 50% 50%, rgba(190,242,100,0.06) 0%, transparent 60%),
+      #030208;
+  }
+
+  /* ── Top Stripe ── */
+  .top-stripe {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 100;
+    background: linear-gradient(90deg, #c084fc, #38bdf8, #bef264, #fb7185, #fbbf24, #c084fc);
+    background-size: 300% 100%;
+    animation: stripe-flow 5s linear infinite;
+  }
+  @keyframes stripe-flow { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+
+  /* ── Grid Overlay ── */
+  .grid-overlay {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.025;
+    background-image:
+      linear-gradient(rgba(192,132,252,0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(192,132,252,0.5) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ── Vignette ── */
+  .vignette {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 50%, rgba(3,2,8,0.65) 100%);
+  }
+
+  /* ── Particles ── */
+  #particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+  .particle {
+    position: absolute; font-size: 14px; opacity: 0; pointer-events: none; user-select: none;
+    animation: particle-float linear infinite;
+  }
+  @keyframes particle-float {
+    0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-60px) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── Corner Decor ── */
+  .corner-decor { position: fixed; z-index: 1; pointer-events: none; opacity: 0.12; }
+  .corner-decor.tl { top: 12px; left: 12px; }
+  .corner-decor.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+  .corner-decor.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+  .corner-decor.br { bottom: 12px; right: 12px; transform: scale(-1); }
+
+  /* ── Main Layout ── */
+  .main { position: relative; z-index: 10; max-width: 480px; margin: 0 auto; padding: 60px 16px 80px; }
+
+  /* ── Section Card ── */
+  .section-card {
+    background: rgba(16,13,30,0.72);
+    border: 1px solid rgba(192,132,252,0.15);
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(12px);
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  }
+  .section-card:hover {
+    border-color: rgba(192,132,252,0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(168,85,247,0.15);
+  }
+
+  /* ── Reveal ── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Avatar ── */
+  .avatar-ring {
+    width: 110px; height: 110px; border-radius: 50%;
+    padding: 3px;
+    background: conic-gradient(#c084fc, #38bdf8, #bef264, #fb7185, #fbbf24, #c084fc);
+    animation: ring-spin 8s linear infinite;
+    display: inline-block;
+  }
+  @keyframes ring-spin { to { transform: rotate(360deg); } }
+  .avatar-inner {
+    width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+    background: #100d1e;
+    border: 2px solid #030208;
+  }
+  .status-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #bef264; border: 2px solid #030208;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100%{ box-shadow:0 0 0 0 rgba(190,242,100,0.7); }
+    50%    { box-shadow:0 0 0 6px rgba(190,242,100,0); }
+  }
+
+  /* ── Shimmer Title ── */
+  .shimmer-title {
+    font-family: var(--font-display);
+    background: linear-gradient(90deg, #c084fc 0%, #7dd3fc 30%, #bef264 55%, #fb7185 80%, #c084fc 100%);
+    background-size: 250% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmer-move 4s linear infinite;
+  }
+  @keyframes shimmer-move { to { background-position: -250% center; } }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    border: 1px solid; cursor: default;
+  }
+
+  /* ── Type Letter Cards ── */
+  .letter-card {
+    flex: 1; padding: 10px 6px; border-radius: 12px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .letter-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+
+  /* ── Depth Meter ── */
+  .depth-seg {
+    width: 18px; height: 10px; border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .depth-seg.lit { background: #c084fc; box-shadow: 0 0 6px rgba(192,132,252,0.7); }
+
+  /* ── Trait Bar ── */
+  .trait-bar-bg {
+    height: 7px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden;
+  }
+  .trait-bar-fill {
+    height: 100%; border-radius: 4px; width: 0%;
+    background: linear-gradient(90deg, #a855f7, #38bdf8);
+    transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  /* ── Social Btn ── */
+  .social-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 18px; border-radius: 14px; width: 100%;
+    border: 1px solid rgba(192,132,252,0.2);
+    background: rgba(255,255,255,0.04);
+    color: #e8dff8; font-size: 14px; font-weight: 500; cursor: pointer;
+    text-decoration: none; transition: all 0.25s;
+  }
+  .social-btn:hover {
+    background: rgba(192,132,252,0.12);
+    border-color: rgba(192,132,252,0.5);
+    transform: translateX(4px);
+  }
+
+  /* ── Carousel ── */
+  .carousel-track { display: flex; transition: transform 0.55s cubic-bezier(0.22,1,0.36,1); }
+  .carousel-slide { min-width: 100%; border-radius: 14px; overflow: hidden; }
+  .carousel-slide img { width: 100%; height: 220px; object-fit: cover; display: block; }
+  .carousel-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.25); border: none; cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .carousel-dot.active { background: #c084fc; transform: scale(1.35); }
+
+  /* ── Music Player ── */
+  .vinyl {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: conic-gradient(#1a1030 0deg, #2d1f52 60deg, #1a1030 120deg, #3b2068 180deg, #1a1030 240deg, #2d1f52 300deg, #1a1030 360deg);
+    display: flex; align-items: center; justify-content: center;
+    animation: vinyl-spin 4s linear infinite; animation-play-state: paused;
+    box-shadow: 0 0 0 3px #c084fc, 0 0 20px rgba(192,132,252,0.4);
+  }
+  .vinyl.playing { animation-play-state: running; }
+  @keyframes vinyl-spin { to { transform: rotate(360deg); } }
+  .vinyl-center {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle, #e8dff8 40%, #c084fc 100%);
+    border: 2px solid #030208;
+  }
+  .track-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .track-item:hover { background: rgba(192,132,252,0.08); }
+  .track-item.active { background: rgba(192,132,252,0.15); }
+  .progress-bar-bg {
+    height: 4px; border-radius: 2px; background: rgba(255,255,255,0.1);
+    cursor: pointer; overflow: hidden;
+  }
+  .progress-bar-fill { height: 100%; border-radius: 2px; background: #c084fc; width: 0%; transition: width 0.3s; }
+
+  /* ── FAQ Accordion ── */
+  details.faq-item { border-radius: 12px; overflow: hidden; border: 1px solid rgba(192,132,252,0.15); }
+  details.faq-item summary {
+    padding: 14px 16px; cursor: pointer; font-weight: 600; font-size: 14px;
+    list-style: none; display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.03);
+    transition: background 0.2s;
+  }
+  details.faq-item summary:hover { background: rgba(192,132,252,0.08); }
+  details.faq-item summary::after { content:'＋'; font-size:18px; color:#c084fc; transition: transform 0.3s; }
+  details.faq-item[open] summary::after { transform: rotate(45deg); }
+  details.faq-item .faq-body { padding: 14px 16px; font-size: 13px; color: #c4b5e8; line-height: 1.7; background: rgba(255,255,255,0.02); }
+
+  /* ── Scroll-to-top ── */
+  #scrollTop {
+    position: fixed; bottom: 28px; right: 20px; z-index: 200;
+    width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(192,132,252,0.4);
+    background: rgba(16,13,30,0.9); color: #c084fc; font-size: 18px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+    backdrop-filter: blur(8px);
+  }
+  #scrollTop.show { opacity: 1; pointer-events: auto; }
+  #scrollTop:hover { transform: translateY(-3px); }
+
+  /* ── Word Example Pill ── */
+  .word-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 30px; font-size: 13px; font-weight: 600;
+    border: 1px solid rgba(192,132,252,0.25);
+    background: rgba(168,85,247,0.08);
+    color: #d8b4fe; cursor: default; transition: all 0.2s;
+  }
+  .word-pill:hover {
+    background: rgba(168,85,247,0.2);
+    border-color: rgba(192,132,252,0.5);
+    transform: scale(1.04);
+  }
+
+  /* ── Code Block ── */
+  .code-block {
+    background: rgba(3,2,8,0.8); border: 1px solid rgba(192,132,252,0.15);
+    border-radius: 12px; padding: 16px; font-family: monospace; font-size: 12px;
+    line-height: 1.8; color: #c4b5e8; overflow-x: auto;
+  }
+  .code-keyword { color: #c084fc; }
+  .code-string { color: #bef264; }
+  .code-comment { color: #64748b; font-style: italic; }
+  .code-func { color: #38bdf8; }
+  .code-num { color: #fb7185; }
+
+  /* ── Form ── */
+  .form-input {
+    width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(192,132,252,0.2);
+    border-radius: 10px; padding: 11px 14px; color: #e8dff8; font-size: 13px; outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    font-family: var(--font-body);
+  }
+  .form-input::placeholder { color: rgba(255,255,255,0.25); }
+  .form-input:focus { border-color: #a855f7; box-shadow: 0 0 0 3px rgba(168,85,247,0.15); }
+  .form-btn {
+    width: 100%; padding: 13px; border-radius: 12px; border: none; cursor: pointer; font-size: 14px;
+    font-weight: 700; font-family: var(--font-body);
+    background: linear-gradient(135deg, #a855f7, #38bdf8);
+    color: #fff; transition: opacity 0.2s, transform 0.2s;
+  }
+  .form-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* ── Etymology Timeline ── */
+  .etym-line {
+    display: flex; align-items: flex-start; gap: 14px; padding: 12px 0;
+    border-bottom: 1px solid rgba(192,132,252,0.08);
+  }
+  .etym-line:last-child { border-bottom: none; }
+  .etym-dot {
+    width: 12px; height: 12px; border-radius: 50%; margin-top: 4px; flex-shrink: 0;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    .main { padding: 52px 10px 70px; }
+    .section-card { padding: 22px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Layers -->
+<div class="lex-bg"></div>
+<div class="grid-overlay"></div>
+<div class="vignette"></div>
+<div class="top-stripe"></div>
+<div id="particles"></div>
+
+<!-- Corner Decor -->
+<svg class="corner-decor tl" width="60" height="60" viewBox="0 0 60 60" fill="none">
+  <path d="M5 55 L5 5 L55 5" stroke="#c084fc" stroke-width="2" fill="none"/>
+  <circle cx="5" cy="5" r="3" fill="#c084fc"/>
+  <text x="12" y="24" font-size="11" fill="#c084fc" font-family="serif" opacity="0.7">ble</text>
+</svg>
+<svg class="corner-decor tr" width="60" height="60" viewBox="0 0 60 60" fill="none">
+  <path d="M5 55 L5 5 L55 5" stroke="#38bdf8" stroke-width="2" fill="none"/>
+  <circle cx="5" cy="5" r="3" fill="#38bdf8"/>
+  <text x="12" y="24" font-size="11" fill="#38bdf8" font-family="serif" opacity="0.7">→</text>
+</svg>
+<svg class="corner-decor bl" width="60" height="60" viewBox="0 0 60 60" fill="none">
+  <path d="M5 55 L5 5 L55 5" stroke="#bef264" stroke-width="2" fill="none"/>
+  <circle cx="5" cy="5" r="3" fill="#bef264"/>
+</svg>
+<svg class="corner-decor br" width="60" height="60" viewBox="0 0 60 60" fill="none">
+  <path d="M5 55 L5 5 L55 5" stroke="#fb7185" stroke-width="2" fill="none"/>
+  <circle cx="5" cy="5" r="3" fill="#fb7185"/>
+</svg>
+
+<!-- Scroll to Top -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="맨 위로">↑</button>
+
+<!-- ════════════ MAIN ════════════ -->
+<main class="main">
+
+  <!-- ① HERO -->
+  <section class="section-card reveal" id="hero">
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;">
+
+      <!-- Avatar -->
+      <div style="position:relative;">
+        <div class="avatar-ring">
+          <div class="avatar-inner">
+            <img src="https://api.dicebear.com/9.x/shapes/svg?seed=ble&backgroundColor=c084fc,38bdf8,bef264&backgroundType=gradientLinear" width="110" height="110" alt="ble avatar" style="width:100%;height:100%;object-fit:cover;"/>
+          </div>
+        </div>
+        <span class="status-dot" style="position:absolute;bottom:4px;right:4px;"></span>
+      </div>
+
+      <!-- Title -->
+      <div>
+        <div style="font-size:11px;color:#7dd3fc;letter-spacing:4px;font-weight:600;margin-bottom:6px;">ENGLISH SUFFIX</div>
+        <h1 class="shimmer-title" style="font-size:52px;font-weight:800;line-height:1;margin-bottom:4px;">‑ble</h1>
+        <p style="font-size:14px;color:#a78bfa;font-family:var(--font-korean);">ble.kr · 가능성의 언어</p>
+      </div>
+
+      <!-- Tags -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+        <span class="tag" style="color:#c084fc;border-color:rgba(192,132,252,0.4);background:rgba(192,132,252,0.08);">suffix</span>
+        <span class="tag" style="color:#7dd3fc;border-color:rgba(125,211,252,0.4);background:rgba(125,211,252,0.08);">adjective</span>
+        <span class="tag" style="color:#bef264;border-color:rgba(190,242,100,0.4);background:rgba(190,242,100,0.08);">‑able</span>
+        <span class="tag" style="color:#fb7185;border-color:rgba(251,113,133,0.4);background:rgba(251,113,133,0.08);">‑ible</span>
+        <span class="tag" style="color:#fbbf24;border-color:rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);">Latin</span>
+      </div>
+
+      <!-- Letter Cards -->
+      <div style="display:flex;gap:8px;width:100%;max-width:240px;">
+        <div class="letter-card">
+          <div style="font-size:22px;font-weight:800;color:#c084fc;font-family:var(--font-display);">b</div>
+          <div style="font-size:9px;color:#94a3b8;margin-top:2px;">base</div>
+        </div>
+        <div class="letter-card">
+          <div style="font-size:22px;font-weight:800;color:#38bdf8;font-family:var(--font-display);">l</div>
+          <div style="font-size:9px;color:#94a3b8;margin-top:2px;">link</div>
+        </div>
+        <div class="letter-card">
+          <div style="font-size:22px;font-weight:800;color:#bef264;font-family:var(--font-display);">e</div>
+          <div style="font-size:9px;color:#94a3b8;margin-top:2px;">enable</div>
+        </div>
+      </div>
+
+      <!-- Depth Meter -->
+      <div style="width:100%;max-width:340px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:6px;">
+          <span>언어 깊이 (Lexical Depth)</span>
+          <span style="color:#c084fc;" id="depthPct">0%</span>
+        </div>
+        <div style="display:flex;gap:3px;flex-wrap:wrap;" id="depthMeter"></div>
+      </div>
+
+      <!-- Meaning Block -->
+      <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(192,132,252,0.2);border-radius:14px;padding:14px 18px;width:100%;text-align:left;">
+        <div style="font-size:11px;color:#7dd3fc;letter-spacing:2px;font-weight:600;margin-bottom:8px;">CORE MEANING</div>
+        <div style="font-size:16px;font-weight:700;color:#e8dff8;margin-bottom:4px;">"~할 수 있는" · "~의 성질이 있는"</div>
+        <div style="font-size:12px;color:#c4b5e8;line-height:1.6;">
+          <strong style="color:#c084fc;">‑able / ‑ible</strong> 형태로 동사나 명사 뒤에 붙어 형용사를 만드는 영어 접미사.<br/>
+          라틴어 <em style="color:#fbbf24;">‑bilis</em>에서 유래하여 "~이 가능한", "~의 성질을 가진"이라는 뜻을 부여합니다.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② KPI BOARD -->
+  <section class="section-card reveal">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;">
+      <div style="padding:14px 8px;border-radius:14px;background:rgba(192,132,252,0.08);border:1px solid rgba(192,132,252,0.15);">
+        <div style="font-size:22px;font-weight:800;color:#c084fc;" class="count-up" data-target="10000">0</div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:3px;">단어 이상</div>
+        <div style="font-size:9px;color:#7dd3fc;">‑ble 파생어 수</div>
+      </div>
+      <div style="padding:14px 8px;border-radius:14px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.15);">
+        <div style="font-size:22px;font-weight:800;color:#38bdf8;">2,000+</div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:3px;">년의 역사</div>
+        <div style="font-size:9px;color:#bef264;">라틴 기원</div>
+      </div>
+      <div style="padding:14px 8px;border-radius:14px;background:rgba(190,242,100,0.08);border:1px solid rgba(190,242,100,0.15);">
+        <div style="font-size:22px;font-weight:800;color:#bef264;">∞</div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:3px;">가능성</div>
+        <div style="font-size:9px;color:#fb7185;">Possibility</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ ANNOUNCEMENT -->
+  <section class="section-card reveal" style="border-color:rgba(192,132,252,0.3);background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(56,189,248,0.05));">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:26px;">📢</span>
+      <div>
+        <div style="font-size:11px;color:#a78bfa;font-weight:600;letter-spacing:2px;margin-bottom:3px;">ANNOUNCEMENT</div>
+        <div style="font-size:14px;font-weight:700;color:#e8dff8;">『가능성의 단어들』 시즌 3 오픈!</div>
+        <div style="font-size:12px;color:#c4b5e8;margin-top:4px;">‑ble 접미사로 완성되는 100개의 핵심 어휘 강의 시작.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ SOCIAL LINKS -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#7dd3fc;letter-spacing:3px;margin-bottom:14px;">CONNECT</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <a href="https://instagram.com/ble.kr" target="_blank" rel="noopener" class="social-btn">
+        <span style="font-size:20px;">📸</span>
+        <div><div style="font-weight:700;">Instagram</div><div style="font-size:11px;color:#94a3b8;">@ble.kr</div></div>
+        <span style="margin-left:auto;color:#94a3b8;font-size:12px;">→</span>
+      </a>
+      <a href="https://youtube.com/@ble.kr" target="_blank" rel="noopener" class="social-btn">
+        <span style="font-size:20px;">▶️</span>
+        <div><div style="font-weight:700;">YouTube</div><div style="font-size:11px;color:#94a3b8;">@ble.kr</div></div>
+        <span style="margin-left:auto;color:#94a3b8;font-size:12px;">→</span>
+      </a>
+      <a href="https://x.com/ble_kr" target="_blank" rel="noopener" class="social-btn">
+        <span style="font-size:20px;">𝕏</span>
+        <div><div style="font-weight:700;">X / Twitter</div><div style="font-size:11px;color:#94a3b8;">@ble_kr</div></div>
+        <span style="margin-left:auto;color:#94a3b8;font-size:12px;">→</span>
+      </a>
+      <a href="https://github.com/ble-kr" target="_blank" rel="noopener" class="social-btn">
+        <span style="font-size:20px;">🐙</span>
+        <div><div style="font-weight:700;">GitHub</div><div style="font-size:11px;color:#94a3b8;">ble-kr</div></div>
+        <span style="margin-left:auto;color:#94a3b8;font-size:12px;">→</span>
+      </a>
+      <a href="mailto:hello@ble.kr" class="social-btn">
+        <span style="font-size:20px;">✉️</span>
+        <div><div style="font-weight:700;">Email</div><div style="font-size:11px;color:#94a3b8;">hello@ble.kr</div></div>
+        <span style="margin-left:auto;color:#94a3b8;font-size:12px;">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ⑤ WORD EXAMPLES -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#c084fc;letter-spacing:3px;margin-bottom:6px;">WORD EXAMPLES</h2>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:14px;">‑able / ‑ible 접미사가 붙은 대표 단어들</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <span class="word-pill">🌟 remark<strong style="color:#c084fc;">able</strong></span>
+      <span class="word-pill">💡 possi<strong style="color:#38bdf8;">ble</strong></span>
+      <span class="word-pill">📖 read<strong style="color:#bef264;">able</strong></span>
+      <span class="word-pill">❤️ lovea<strong style="color:#fb7185;">ble</strong></span>
+      <span class="word-pill">🔥 credi<strong style="color:#fbbf24;">ble</strong></span>
+      <span class="word-pill">✨ flexi<strong style="color:#c084fc;">ble</strong></span>
+      <span class="word-pill">🌊 visi<strong style="color:#38bdf8;">ble</strong></span>
+      <span class="word-pill">⚡ suit<strong style="color:#bef264;">able</strong></span>
+      <span class="word-pill">🎯 responsi<strong style="color:#fb7185;">ble</strong></span>
+      <span class="word-pill">🚀 incred<strong style="color:#fbbf24;">ible</strong></span>
+      <span class="word-pill">🌈 enjoy<strong style="color:#c084fc;">able</strong></span>
+      <span class="word-pill">🔮 availa<strong style="color:#38bdf8;">ble</strong></span>
+    </div>
+  </section>
+
+  <!-- ⑥ LINGUISTIC TRAITS -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#7dd3fc;letter-spacing:3px;margin-bottom:16px;">LINGUISTIC TRAITS</h2>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+          <span style="color:#e8dff8;">단어 형성력 (Word Formation)</span>
+          <span style="color:#c084fc;" data-bar-label>98%</span>
+        </div>
+        <div class="trait-bar-bg"><div class="trait-bar-fill" data-fill="98"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+          <span style="color:#e8dff8;">사용 빈도 (Usage Frequency)</span>
+          <span style="color:#38bdf8;" data-bar-label>96%</span>
+        </div>
+        <div class="trait-bar-bg"><div class="trait-bar-fill" data-fill="96" style="background:linear-gradient(90deg,#38bdf8,#bef264)"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+          <span style="color:#e8dff8;">역사적 지속성 (Historical Continuity)</span>
+          <span style="color:#bef264;" data-bar-label>99%</span>
+        </div>
+        <div class="trait-bar-bg"><div class="trait-bar-fill" data-fill="99" style="background:linear-gradient(90deg,#bef264,#38bdf8)"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+          <span style="color:#e8dff8;">다국어 영향력 (Cross-lingual Influence)</span>
+          <span style="color:#fb7185;" data-bar-label>94%</span>
+        </div>
+        <div class="trait-bar-bg"><div class="trait-bar-fill" data-fill="94" style="background:linear-gradient(90deg,#fb7185,#fbbf24)"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑦ ETYMOLOGY GRID -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#c084fc;letter-spacing:3px;margin-bottom:16px;">SUFFIX TYPES</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+      <div style="padding:14px;border-radius:14px;background:rgba(192,132,252,0.08);border:1px solid rgba(192,132,252,0.2);">
+        <div style="font-size:20px;margin-bottom:6px;">📌</div>
+        <div style="font-size:14px;font-weight:700;color:#c084fc;margin-bottom:4px;">‑able</div>
+        <div style="font-size:11px;color:#94a3b8;">동사 어근에 붙음<br/>read → readable</div>
+      </div>
+      <div style="padding:14px;border-radius:14px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);">
+        <div style="font-size:20px;margin-bottom:6px;">🔷</div>
+        <div style="font-size:14px;font-weight:700;color:#38bdf8;margin-bottom:4px;">‑ible</div>
+        <div style="font-size:11px;color:#94a3b8;">라틴 어근에 붙음<br/>vis → visible</div>
+      </div>
+      <div style="padding:14px;border-radius:14px;background:rgba(190,242,100,0.08);border:1px solid rgba(190,242,100,0.2);">
+        <div style="font-size:20px;margin-bottom:6px;">🌿</div>
+        <div style="font-size:14px;font-weight:700;color:#bef264;margin-bottom:4px;">‑ble</div>
+        <div style="font-size:11px;color:#94a3b8;">단축형 접미사<br/>pos·si·ble</div>
+      </div>
+      <div style="padding:14px;border-radius:14px;background:rgba(251,113,133,0.08);border:1px solid rgba(251,113,133,0.2);">
+        <div style="font-size:20px;margin-bottom:6px;">⚗️</div>
+        <div style="font-size:14px;font-weight:700;color:#fb7185;margin-bottom:4px;">부정형</div>
+        <div style="font-size:11px;color:#94a3b8;">in‑/un‑ + ‑ble<br/>impossible</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑧ CODE BLOCK (suffix anatomy) -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#bef264;letter-spacing:3px;margin-bottom:14px;">SUFFIX ANATOMY</h2>
+    <div class="code-block">
+<span class="code-comment">// suffix: -ble  (ble.kr)</span>
+<span class="code-keyword">const</span> suffix = {
+  symbol:    <span class="code-string">"‑ble"</span>,
+  variants:  [<span class="code-string">"‑able"</span>, <span class="code-string">"‑ible"</span>, <span class="code-string">"‑uble"</span>],
+  origin:    <span class="code-string">"Latin ‑bilis"</span>,
+  meaning:   <span class="code-string">"capable of / worthy of"</span>,
+  pos:       <span class="code-string">"adjective-forming"</span>,
+  words:     <span class="code-num">10000</span><span class="code-comment">+ /* in English */</span>,
+  <span class="code-func">form</span>: (root) => root + <span class="code-string">"ble"</span>,
+};
+<span class="code-comment">// e.g. suffix.form("remarka") → "remarkable"</span>
+    </div>
+  </section>
+
+  <!-- ⑨ ETYMOLOGY TIMELINE -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#fbbf24;letter-spacing:3px;margin-bottom:14px;">ETYMOLOGY TIMELINE</h2>
+    <div>
+      <div class="etym-line">
+        <div class="etym-dot" style="background:#fbbf24;color:#fbbf24;"></div>
+        <div>
+          <div style="font-size:12px;color:#fbbf24;font-weight:700;">Proto-Indo-European</div>
+          <div style="font-size:12px;color:#94a3b8;margin-top:2px;">*‑dʰlo‑ 어근 → 능력·자격을 나타내는 형태소 발생</div>
+        </div>
+      </div>
+      <div class="etym-line">
+        <div class="etym-dot" style="background:#c084fc;color:#c084fc;"></div>
+        <div>
+          <div style="font-size:12px;color:#c084fc;font-weight:700;">Classical Latin (‑bilis)</div>
+          <div style="font-size:12px;color:#94a3b8;margin-top:2px;"><em>amabilis</em> (lovable), <em>credibilis</em> (credible) 등 형용사 접미사로 정착</div>
+        </div>
+      </div>
+      <div class="etym-line">
+        <div class="etym-dot" style="background:#38bdf8;color:#38bdf8;"></div>
+        <div>
+          <div style="font-size:12px;color:#38bdf8;font-weight:700;">Old French (‑able / ‑ible)</div>
+          <div style="font-size:12px;color:#94a3b8;margin-top:2px;">프랑스어를 통해 중세 영어로 유입, 형태 분기 발생</div>
+        </div>
+      </div>
+      <div class="etym-line">
+        <div class="etym-dot" style="background:#bef264;color:#bef264;"></div>
+        <div>
+          <div style="font-size:12px;color:#bef264;font-weight:700;">Modern English</div>
+          <div style="font-size:12px;color:#94a3b8;margin-top:2px;">생산성 극대화 — 신조어에도 자유롭게 결합 (e.g. <em>Googl<strong>able</strong></em>)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑩ QUOTES -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#fb7185;letter-spacing:3px;margin-bottom:14px;">LEXICAL WISDOM</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="border-left:3px solid #c084fc;padding:10px 14px;background:rgba(192,132,252,0.06);border-radius:0 10px 10px 0;">
+        <div style="font-size:14px;color:#e8dff8;font-style:italic;font-family:var(--font-display);">"The limits of my language mean the limits of my world."</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:5px;">— Ludwig Wittgenstein</div>
+      </div>
+      <div style="border-left:3px solid #38bdf8;padding:10px 14px;background:rgba(56,189,248,0.06);border-radius:0 10px 10px 0;">
+        <div style="font-size:14px;color:#e8dff8;font-style:italic;font-family:var(--font-display);">"접미사 하나가 단어의 세계를 무한히 확장한다."</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:5px;">— ble.kr</div>
+      </div>
+      <div style="border-left:3px solid #bef264;padding:10px 14px;background:rgba(190,242,100,0.06);border-radius:0 10px 10px 0;">
+        <div style="font-size:14px;color:#e8dff8;font-style:italic;font-family:var(--font-display);">"Every remarkable thing starts with making it possible."</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:5px;">— ble.kr</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑪ FEATURED VIDEO -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#c084fc;letter-spacing:3px;margin-bottom:14px;">FEATURED VIDEO</h2>
+    <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(192,132,252,0.2);">
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+        <iframe
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title="Featured Video"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy">
+        </iframe>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#e8dff8;">‑able / ‑ible 완전 정복 강의</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;">ble.kr 대표 강의</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px;color:#c084fc;font-weight:600;">42.1K views</div>
+        <div style="font-size:11px;color:#94a3b8;">6.3K likes</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑫ PLAYLIST -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#38bdf8;letter-spacing:3px;margin-bottom:14px;">PLAYLIST</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <a href="https://youtube.com/@ble.kr" target="_blank" rel="noopener" style="display:flex;gap:12px;text-decoration:none;align-items:center;padding:10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(192,132,252,0.1);transition:background 0.2s;" onmouseover="this.style.background='rgba(192,132,252,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+        <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=120&h=68&fit=crop" alt="ep1" style="width:100px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0;"/>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#e8dff8;">Ep.01 ‑able 기초 완성</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:3px;">18:24 · 28.5K views</div>
+        </div>
+      </a>
+      <a href="https://youtube.com/@ble.kr" target="_blank" rel="noopener" style="display:flex;gap:12px;text-decoration:none;align-items:center;padding:10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(192,132,252,0.1);transition:background 0.2s;" onmouseover="this.style.background='rgba(192,132,252,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=120&h=68&fit=crop" alt="ep2" style="width:100px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0;"/>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#e8dff8;">Ep.02 ‑ible vs ‑able 구별법</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:3px;">22:11 · 19.8K views</div>
+        </div>
+      </a>
+      <a href="https://youtube.com/@ble.kr" target="_blank" rel="noopener" style="display:flex;gap:12px;text-decoration:none;align-items:center;padding:10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(192,132,252,0.1);transition:background 0.2s;" onmouseover="this.style.background='rgba(192,132,252,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=120&h=68&fit=crop" alt="ep3" style="width:100px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0;"/>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#e8dff8;">Ep.03 신조어 Googl<strong style="color:#c084fc;">able</strong>의 탄생</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:3px;">14:38 · 15.2K views</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ⑬ IMAGE CAROUSEL -->
+  <section class="section-card reveal" style="padding:24px 16px;">
+    <h2 style="font-size:13px;font-weight:700;color:#bef264;letter-spacing:3px;margin-bottom:14px;">GALLERY</h2>
+    <div style="position:relative;overflow:hidden;border-radius:14px;" id="carousel">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=480&h=220&fit=crop" alt="slide1" loading="lazy"/>
+          <div style="padding:10px 12px;background:rgba(16,13,30,0.9);">
+            <div style="font-size:13px;font-weight:600;color:#c084fc;">Words & Worlds</div>
+            <div style="font-size:11px;color:#94a3b8;">언어가 만드는 세계</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=480&h=220&fit=crop" alt="slide2" loading="lazy"/>
+          <div style="padding:10px 12px;background:rgba(16,13,30,0.9);">
+            <div style="font-size:13px;font-weight:600;color:#38bdf8;">Etymology Study</div>
+            <div style="font-size:11px;color:#94a3b8;">어원을 탐구하는 시간</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=480&h=220&fit=crop" alt="slide3" loading="lazy"/>
+          <div style="padding:10px 12px;background:rgba(16,13,30,0.9);">
+            <div style="font-size:13px;font-weight:600;color:#bef264;">Vocabulary Power</div>
+            <div style="font-size:11px;color:#94a3b8;">어휘력을 키우는 방법</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=480&h=220&fit=crop" alt="slide4" loading="lazy"/>
+          <div style="padding:10px 12px;background:rgba(16,13,30,0.9);">
+            <div style="font-size:13px;font-weight:600;color:#fb7185;">Suffix Library</div>
+            <div style="font-size:11px;color:#94a3b8;">접미사의 모든 것</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=480&h=220&fit=crop" alt="slide5" loading="lazy"/>
+          <div style="padding:10px 12px;background:rgba(16,13,30,0.9);">
+            <div style="font-size:13px;font-weight:600;color:#fbbf24;">Learn & Grow</div>
+            <div style="font-size:11px;color:#94a3b8;">배움은 무한하다</div>
+          </div>
+        </div>
+      </div>
+      <button id="carouselPrev" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:rgba(16,13,30,0.8);border:1px solid rgba(192,132,252,0.3);color:#c084fc;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+      <button id="carouselNext" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:rgba(16,13,30,0.8);border:1px solid rgba(192,132,252,0.3);color:#c084fc;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
+    </div>
+    <div style="display:flex;justify-content:center;gap:7px;margin-top:12px;" id="carouselDots"></div>
+  </section>
+
+  <!-- ⑭ SPOTLIGHT -->
+  <section class="section-card reveal" style="padding:0;overflow:hidden;">
+    <div style="position:relative;">
+      <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=480&h=200&fit=crop" alt="spotlight" style="width:100%;height:200px;object-fit:cover;display:block;"/>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgba(3,2,8,0.9) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:20px 24px;">
+        <div style="font-size:11px;color:#c084fc;font-weight:700;letter-spacing:3px;margin-bottom:4px;">SPOTLIGHT</div>
+        <div style="font-size:20px;font-weight:800;color:#e8dff8;font-family:var(--font-display);">Possible. Remarkable. Incredible.</div>
+        <div style="font-size:12px;color:#c4b5e8;margin-top:5px;">‑ble 하나면 모든 것이 가능해진다</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑮ MUSIC PLAYER -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#a78bfa;letter-spacing:3px;margin-bottom:16px;">MUSIC PLAYER</h2>
+    <div style="display:flex;align-items:center;gap:20px;margin-bottom:16px;">
+      <div class="vinyl" id="vinyl"><div class="vinyl-center"></div></div>
+      <div style="flex:1;">
+        <div id="trackName" style="font-size:14px;font-weight:700;color:#e8dff8;">Remarkable Journey</div>
+        <div id="trackArtist" style="font-size:11px;color:#94a3b8;margin-top:2px;">ble.kr OST Vol.1</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+          <span id="currentTime" style="font-size:10px;color:#94a3b8;">0:00</span>
+          <div class="progress-bar-bg" id="progressBarBg" style="flex:1;">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+          </div>
+          <span id="totalTime" style="font-size:10px;color:#94a3b8;">3:24</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:20px;margin-bottom:16px;">
+      <button id="prevBtn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(192,132,252,0.2);color:#c4b5e8;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:14px;">⏮</button>
+      <button id="playBtn" style="background:linear-gradient(135deg,#a855f7,#38bdf8);border:none;color:#fff;width:46px;height:46px;border-radius:50%;cursor:pointer;font-size:18px;">▶</button>
+      <button id="nextBtn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(192,132,252,0.2);color:#c4b5e8;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:14px;">⏭</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div class="track-item active" data-track="0">
+        <span style="width:22px;height:22px;border-radius:50%;background:rgba(192,132,252,0.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:#c084fc;flex-shrink:0;">1</span>
+        <div style="flex:1;"><div style="font-size:13px;color:#e8dff8;">Remarkable Journey</div><div style="font-size:10px;color:#94a3b8;">3:24</div></div>
+        <span style="color:#c084fc;font-size:11px;">♫</span>
+      </div>
+      <div class="track-item" data-track="1">
+        <span style="width:22px;height:22px;border-radius:50%;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;color:#38bdf8;flex-shrink:0;">2</span>
+        <div style="flex:1;"><div style="font-size:13px;color:#e8dff8;">Possible Dreams</div><div style="font-size:10px;color:#94a3b8;">4:07</div></div>
+        <span style="color:#38bdf8;font-size:11px;">♪</span>
+      </div>
+      <div class="track-item" data-track="2">
+        <span style="width:22px;height:22px;border-radius:50%;background:rgba(190,242,100,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;color:#bef264;flex-shrink:0;">3</span>
+        <div style="flex:1;"><div style="font-size:13px;color:#e8dff8;">Incredible Waves</div><div style="font-size:10px;color:#94a3b8;">3:52</div></div>
+        <span style="color:#bef264;font-size:11px;">♫</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑯ PROJECTS -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#38bdf8;letter-spacing:3px;margin-bottom:14px;">PROJECTS</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+      <div style="padding:14px;border-radius:14px;background:rgba(192,132,252,0.08);border:1px solid rgba(192,132,252,0.2);">
+        <div style="font-size:18px;margin-bottom:6px;">📚</div>
+        <div style="font-size:13px;font-weight:700;color:#c084fc;margin-bottom:4px;">‑ble Dictionary</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;">10,000+ 접미사 어휘 사전</div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(190,242,100,0.15);color:#bef264;border:1px solid rgba(190,242,100,0.3);">LIVE</span>
+      </div>
+      <div style="padding:14px;border-radius:14px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);">
+        <div style="font-size:18px;margin-bottom:6px;">🔬</div>
+        <div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px;">Word Lab</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;">어원 분석 인터랙티브 도구</div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);">BETA</span>
+      </div>
+      <div style="padding:14px;border-radius:14px;background:rgba(190,242,100,0.08);border:1px solid rgba(190,242,100,0.2);">
+        <div style="font-size:18px;margin-bottom:6px;">🎮</div>
+        <div style="font-size:13px;font-weight:700;color:#bef264;margin-bottom:4px;">Suffix Quest</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;">접미사 학습 게임</div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);">DEV</span>
+      </div>
+      <div style="padding:14px;border-radius:14px;background:rgba(251,113,133,0.08);border:1px solid rgba(251,113,133,0.2);">
+        <div style="font-size:18px;margin-bottom:6px;">🤖</div>
+        <div style="font-size:13px;font-weight:700;color:#fb7185;margin-bottom:4px;">‑ble AI</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;">AI 접미사 추천 시스템</div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(251,113,133,0.15);color:#fb7185;border:1px solid rgba(251,113,133,0.3);">SOON</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑰ RECENT POSTS -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#fb7185;letter-spacing:3px;margin-bottom:14px;">RECENT POSTS</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(192,132,252,0.1);">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(192,132,252,0.15);color:#c084fc;">#suffix</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(56,189,248,0.15);color:#38bdf8;">#english</span>
+        </div>
+        <div style="font-size:14px;font-weight:600;color:#e8dff8;margin-bottom:4px;">‑able vs ‑ible: 언제 무엇을 쓸까?</div>
+        <div style="font-size:11px;color:#94a3b8;">2025.12.01</div>
+      </div>
+      <div style="padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(192,132,252,0.1);">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(190,242,100,0.15);color:#bef264;">#etymology</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(251,113,133,0.15);color:#fb7185;">#latin</span>
+        </div>
+        <div style="font-size:14px;font-weight:600;color:#e8dff8;margin-bottom:4px;">라틴어 ‑bilis가 영어를 정복한 방법</div>
+        <div style="font-size:11px;color:#94a3b8;">2025.11.20</div>
+      </div>
+      <div style="padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(192,132,252,0.1);">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(251,191,36,0.15);color:#fbbf24;">#vocabulary</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(192,132,252,0.15);color:#c084fc;">#word</span>
+        </div>
+        <div style="font-size:14px;font-weight:600;color:#e8dff8;margin-bottom:4px;">Googl<strong style="color:#c084fc;">able</strong> — 신조어 탄생의 메커니즘</div>
+        <div style="font-size:11px;color:#94a3b8;">2025.11.05</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑱ FAQ -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#c084fc;letter-spacing:3px;margin-bottom:14px;">FAQ</h2>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <details class="faq-item">
+        <summary>‑ble 접미사는 정확히 무엇인가요?</summary>
+        <div class="faq-body">‑ble은 영어에서 형용사를 만드는 접미사로, 주로 <strong>‑able</strong>과 <strong>‑ible</strong>의 두 가지 형태로 나타납니다. 라틴어 <em>‑bilis</em>에서 유래하였으며 "~할 수 있는", "~의 성질을 가진"이라는 의미를 동사나 명사 어근에 부여합니다.</div>
+      </details>
+      <details class="faq-item">
+        <summary>‑able과 ‑ible은 어떻게 구분하나요?</summary>
+        <div class="faq-body">일반적으로 <strong>‑able</strong>은 영어계 동사 어근(read → readable)에, <strong>‑ible</strong>은 라틴어·프랑스어 어근(vis → visible, cred → credible)에 붙습니다. 그러나 예외가 많아 개별 단어를 외우는 것이 가장 안전한 방법입니다.</div>
+      </details>
+      <details class="faq-item">
+        <summary>ble.kr은 어떤 콘텐츠를 제공하나요?</summary>
+        <div class="faq-body">ble.kr은 영어 접미사 <strong>‑ble</strong>을 중심으로 어원 탐구, 어휘 확장, 영어 학습 콘텐츠를 제공합니다. 강의 영상, 인터랙티브 사전, 학습 게임 등을 통해 누구나 쉽고 재미있게 어휘력을 키울 수 있도록 돕습니다.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ⑲ NEWSLETTER -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#bef264;letter-spacing:3px;margin-bottom:6px;">NEWSLETTER</h2>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:14px;">매주 ‑ble 어휘 큐레이션을 받아보세요.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <input class="form-input" id="nlEmail" type="email" placeholder="your@email.com" autocomplete="email"/>
+      <button class="form-btn" id="nlBtn" onclick="handleNewsletter()">구독하기</button>
+      <div id="nlMsg" style="font-size:12px;text-align:center;min-height:16px;"></div>
+    </div>
+  </section>
+
+  <!-- ⑳ CONTACT -->
+  <section class="section-card reveal">
+    <h2 style="font-size:13px;font-weight:700;color:#fb7185;letter-spacing:3px;margin-bottom:14px;">CONTACT</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <input class="form-input" id="ctName" type="text" placeholder="이름 (Name)" autocomplete="name"/>
+      <input class="form-input" id="ctEmail" type="email" placeholder="이메일 (Email)" autocomplete="email"/>
+      <select class="form-input" id="ctTopic">
+        <option value="" disabled selected>문의 유형 선택</option>
+        <option value="collab">협업 제안</option>
+        <option value="study">어휘 학습 문의</option>
+        <option value="content">콘텐츠 제작</option>
+        <option value="other">기타</option>
+      </select>
+      <textarea class="form-input" id="ctMsg" rows="4" placeholder="메시지를 입력하세요..." style="resize:vertical;"></textarea>
+      <button class="form-btn" onclick="handleContact()">보내기</button>
+      <div id="ctMsg2" style="font-size:12px;text-align:center;min-height:16px;"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="text-align:center;padding:24px 0 0;">
+    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px;">
+      <span class="tag" style="color:#c084fc;border-color:rgba(192,132,252,0.3);background:rgba(192,132,252,0.06);">#suffix</span>
+      <span class="tag" style="color:#38bdf8;border-color:rgba(56,189,248,0.3);background:rgba(56,189,248,0.06);">#‑able</span>
+      <span class="tag" style="color:#bef264;border-color:rgba(190,242,100,0.3);background:rgba(190,242,100,0.06);">#‑ible</span>
+      <span class="tag" style="color:#fb7185;border-color:rgba(251,113,133,0.3);background:rgba(251,113,133,0.06);">#영단어</span>
+      <span class="tag" style="color:#fbbf24;border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.06);">#어원</span>
+    </div>
+    <div style="font-size:15px;font-weight:700;color:#e8dff8;font-family:var(--font-display);margin-bottom:6px;">Every word, possible.</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:8px;font-family:var(--font-korean);">가능성을 붙이는 언어, ‑ble</div>
+    <a href="https://ble.kr" style="font-size:13px;color:#c084fc;text-decoration:none;">🌐 ble.kr</a>
+    <div style="font-size:11px;color:#374151;margin-top:10px;">© 2025 ble.kr — All rights reserved.</div>
+  </footer>
+
+</main>
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script>
+/* ── Particles ── */
+(function createParticles() {
+  const symbols = ['‑ble','‑able','‑ible','∞','◈','◆','▸','⬡','○','✦','★','◇','α','β','λ'];
+  const colors  = ['#c084fc','#38bdf8','#bef264','#fb7185','#fbbf24','#a78bfa','#7dd3fc'];
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 48; i++) {
+    const p = document.createElement('span');
+    p.className = 'particle';
+    p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.color = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration  = (10 + Math.random() * 18) + 's';
+    p.style.animationDelay    = (-Math.random() * 20) + 's';
+    p.style.fontSize = (10 + Math.random() * 8) + 'px';
+    container.appendChild(p);
+  }
+})();
+
+/* ── Depth Meter (20 segments) ── */
+(function buildDepthMeter() {
+  const meter = document.getElementById('depthMeter');
+  const total = 20;
+  const filled = 17;
+  const segColors = ['#c084fc','#a78bfa','#38bdf8','#7dd3fc','#bef264','#fb7185','#fbbf24'];
+  for (let i = 0; i < total; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'depth-seg';
+    seg.id = 'dseg' + i;
+    if (i < filled) seg.dataset.fill = true;
+    meter.appendChild(seg);
+  }
+})();
+
+/* ── Count-up ── */
+function countUp(el, target, duration) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = Math.round(start).toLocaleString();
+    if (start >= target) clearInterval(timer);
+  }, 16);
+}
+
+/* ── Scroll Reveal ── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    el.classList.add('visible');
+
+    /* Trait bars */
+    el.querySelectorAll('.trait-bar-fill[data-fill]').forEach(bar => {
+      bar.style.width = bar.dataset.fill + '%';
+    });
+
+    /* Depth meter */
+    if (el.querySelector('#depthMeter')) {
+      let i = 0;
+      const segs = document.querySelectorAll('.depth-seg[data-fill]');
+      const pct  = document.getElementById('depthPct');
+      const interval = setInterval(() => {
+        if (i >= segs.length) { clearInterval(interval); return; }
+        segs[i].classList.add('lit');
+        pct.textContent = Math.round(((i + 1) / 20) * 100) + '%';
+        i++;
+      }, 60);
+    }
+
+    /* Count-up numbers */
+    el.querySelectorAll('.count-up[data-target]').forEach(cu => {
+      countUp(cu, parseInt(cu.dataset.target), 1500);
+    });
+
+    revealObserver.unobserve(el);
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ── Carousel ── */
+(function initCarousel() {
+  const track  = document.getElementById('carouselTrack');
+  const dotsEl = document.getElementById('carouselDots');
+  const total  = 5;
+  let current  = 0;
+  let autoPlay;
+
+  /* build dots */
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('button');
+    d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'slide ' + (i + 1));
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(idx) {
+    current = (idx + total) % total;
+    track.style.transform = 'translateX(-' + current * 100 + '%)';
+    dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  document.getElementById('carouselPrev').onclick = () => { goTo(current - 1); resetAuto(); };
+  document.getElementById('carouselNext').onclick = () => { goTo(current + 1); resetAuto(); };
+
+  /* keyboard */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  { goTo(current - 1); resetAuto(); }
+    if (e.key === 'ArrowRight') { goTo(current + 1); resetAuto(); }
+  });
+
+  /* touch */
+  let touchStartX = 0;
+  const carousel = document.getElementById('carousel');
+  carousel.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+  carousel.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) { goTo(current + (dx < 0 ? 1 : -1)); resetAuto(); }
+  });
+
+  function resetAuto() { clearInterval(autoPlay); autoPlay = setInterval(() => goTo(current + 1), 5000); }
+  resetAuto();
+})();
+
+/* ── Music Player ── */
+(function initPlayer() {
+  const tracks = [
+    { title: 'Remarkable Journey',  artist: 'ble.kr OST Vol.1', duration: 204 },
+    { title: 'Possible Dreams',     artist: 'ble.kr OST Vol.1', duration: 247 },
+    { title: 'Incredible Waves',    artist: 'ble.kr OST Vol.2', duration: 232 },
+  ];
+  let current = 0, playing = false, progress = 0, timer;
+
+  const vinyl    = document.getElementById('vinyl');
+  const playBtn  = document.getElementById('playBtn');
+  const trackName= document.getElementById('trackName');
+  const trackArtist=document.getElementById('trackArtist');
+  const curTime  = document.getElementById('currentTime');
+  const totalTime= document.getElementById('totalTime');
+  const barFill  = document.getElementById('progressBarFill');
+  const items    = document.querySelectorAll('.track-item');
+
+  function fmt(s) { return Math.floor(s/60)+':'+(s%60<10?'0':'')+Math.floor(s%60); }
+
+  function load(idx) {
+    current = idx;
+    progress = 0;
+    trackName.textContent  = tracks[idx].title;
+    trackArtist.textContent= tracks[idx].artist;
+    totalTime.textContent  = fmt(tracks[idx].duration);
+    curTime.textContent    = '0:00';
+    barFill.style.width    = '0%';
+    items.forEach((it, i) => it.classList.toggle('active', i === idx));
+  }
+
+  function tick() {
+    if (!playing) return;
+    progress++;
+    if (progress >= tracks[current].duration) {
+      progress = 0;
+      load((current + 1) % tracks.length);
+      playing = true;
+      vinyl.classList.add('playing');
+    }
+    curTime.textContent = fmt(progress);
+    barFill.style.width = (progress / tracks[current].duration * 100) + '%';
+  }
+
+  function togglePlay() {
+    playing = !playing;
+    playBtn.textContent = playing ? '⏸' : '▶';
+    vinyl.classList.toggle('playing', playing);
+    clearInterval(timer);
+    if (playing) timer = setInterval(tick, 1000);
+  }
+
+  playBtn.onclick = togglePlay;
+  document.getElementById('prevBtn').onclick = () => { load((current - 1 + tracks.length) % tracks.length); if (playing) { clearInterval(timer); timer = setInterval(tick, 1000); } };
+  document.getElementById('nextBtn').onclick = () => { load((current + 1) % tracks.length); if (playing) { clearInterval(timer); timer = setInterval(tick, 1000); } };
+  items.forEach((it, i) => { it.onclick = () => { load(i); if (!playing) togglePlay(); else { clearInterval(timer); timer = setInterval(tick, 1000); } }; });
+
+  document.getElementById('progressBarBg').onclick = function(e) {
+    const pct = e.offsetX / this.offsetWidth;
+    progress = Math.floor(pct * tracks[current].duration);
+    curTime.textContent = fmt(progress);
+    barFill.style.width = (pct * 100) + '%';
+  };
+
+  load(0);
+})();
+
+/* ── Scroll to Top ── */
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('show', window.scrollY > 300);
+});
+
+/* ── Newsletter ── */
+function handleNewsletter() {
+  const email = document.getElementById('nlEmail').value.trim();
+  const msg   = document.getElementById('nlMsg');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.textContent = '⚠️ 유효한 이메일을 입력해 주세요.';
+    msg.style.color = '#fb7185';
+    return;
+  }
+  msg.textContent = '✅ 구독 완료! 매주 어휘 큐레이션을 보내드립니다.';
+  msg.style.color = '#bef264';
+  document.getElementById('nlEmail').value = '';
+}
+
+/* ── Contact Form ── */
+function handleContact() {
+  const name  = document.getElementById('ctName').value.trim();
+  const email = document.getElementById('ctEmail').value.trim();
+  const topic = document.getElementById('ctTopic').value;
+  const msg   = document.getElementById('ctMsg').value.trim();
+  const out   = document.getElementById('ctMsg2');
+  if (!name || !email || !topic || !msg) {
+    out.textContent = '⚠️ 모든 필드를 입력해 주세요.';
+    out.style.color = '#fb7185';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    out.textContent = '⚠️ 유효한 이메일을 입력해 주세요.';
+    out.style.color = '#fb7185';
+    return;
+  }
+  out.textContent = '✅ 메시지가 전송되었습니다. 곧 답변 드리겠습니다!';
+  out.style.color = '#bef264';
+  ['ctName','ctEmail','ctMsg'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ctTopic').value = '';
+}
+</script>
+
+</body>
+</html>
